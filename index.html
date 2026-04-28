@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLEXreport Suite — Power BI Health Audit · Simform</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #1F3A5F;
+    --navy-dark: #142640;
+    --blue: #2E75B6;
+    --blue-light: #4A90D9;
+    --teal: #2A9D8F;
+    --red: #C0392B;
+    --red-light: #FDECEA;
+    --amber: #D68910;
+    --amber-light: #FCF3DC;
+    --green: #27AE60;
+    --green-light: #E8F5EC;
+    --gray: #5D6D7E;
+    --gray-light: #F4F6F8;
+    --bg: #FAFBFD;
+    --surface: #FFFFFF;
+    --border: #E1E8EF;
+    --text: #2C3E50;
+    --text-muted: #6C7A89;
+    --shadow-sm: 0 1px 3px rgba(31, 58, 95, 0.06), 0 1px 2px rgba(31, 58, 95, 0.04);
+    --shadow: 0 4px 16px rgba(31, 58, 95, 0.08), 0 2px 4px rgba(31, 58, 95, 0.04);
+    --shadow-lg: 0 12px 36px rgba(31, 58, 95, 0.12), 0 4px 8px rgba(31, 58, 95, 0.06);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  /* ========== HEADER / HERO ========== */
+  header.hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 60%, #0E1A2D 100%);
+    color: white;
+    padding: 56px 32px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(46, 117, 182, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: 10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(42, 157, 143, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+  }
+  .hero-tag .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+  .hero h1 .accent { color: var(--blue-light); }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 32px;
+    max-width: 720px;
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .hero-meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 4px;
+  }
+  .hero-meta-item .value { font-size: 16px; font-weight: 600; }
+
+  /* ========== NAV ========== */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  nav.toc ul {
+    list-style: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+    padding: 0 32px;
+    overflow-x: auto;
+  }
+  nav.toc a {
+    display: block;
+    padding: 16px 14px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  nav.toc a:hover { color: var(--navy); }
+  nav.toc a.active { color: var(--navy); border-bottom-color: var(--blue); }
+
+  /* ========== LAYOUT ========== */
+  main { max-width: 1200px; margin: 0 auto; padding: 56px 32px 80px; }
+  section { margin-bottom: 80px; scroll-margin-top: 80px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h2.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .section-lead {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 760px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+  h3 { font-size: 20px; color: var(--navy); margin-bottom: 12px; font-weight: 600; }
+  h4 { font-size: 16px; color: var(--navy); margin-bottom: 8px; font-weight: 600; }
+
+  /* ========== KPI TILES ========== */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .kpi {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    border-top: 4px solid var(--blue);
+  }
+  .kpi.bad { border-top-color: var(--red); }
+  .kpi.warn { border-top-color: var(--amber); }
+  .kpi.good { border-top-color: var(--green); }
+  .kpi.neutral { border-top-color: var(--blue); }
+  .kpi-value {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .kpi-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .kpi-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .kpi-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .kpi.bad .kpi-icon { background: var(--red-light); color: var(--red); }
+  .kpi.warn .kpi-icon { background: var(--amber-light); color: var(--amber); }
+  .kpi.good .kpi-icon { background: var(--green-light); color: var(--green); }
+  .kpi.neutral .kpi-icon { background: rgba(46,117,182,0.12); color: var(--blue); }
+
+  /* ========== CARDS ========== */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .kpi-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+  }
+
+  /* ========== CHART CONTAINERS ========== */
+  .chart-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .chart-card h3 { margin-bottom: 4px; }
+  .chart-card .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  .chart-wrap { position: relative; height: 280px; }
+
+  /* ========== HEATMAP TABLE ========== */
+  .matrix-wrap { overflow-x: auto; background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  table.matrix {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 13px;
+  }
+  table.matrix th {
+    text-align: left;
+    background: var(--navy);
+    color: white;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+  }
+  table.matrix th.center, table.matrix td.center { text-align: center; }
+  table.matrix td {
+    padding: 10px 12px;
+    background: white;
+    border-radius: var(--radius-sm);
+    vertical-align: middle;
+  }
+  table.matrix .name {
+    font-weight: 600;
+    color: var(--navy);
+    background: rgba(46, 117, 182, 0.08);
+  }
+  td.bad { background: #FEE6E2 !important; color: var(--red); font-weight: 700; }
+  td.warn { background: #FCEFD4 !important; color: var(--amber); font-weight: 600; }
+  td.good { background: #D9F2E0 !important; color: var(--green); font-weight: 700; }
+  td.import-pill { background: var(--green) !important; color: white; font-weight: 700; border-radius: 100px; }
+  td.dq-pill { background: var(--red) !important; color: white; font-weight: 700; border-radius: 100px; font-size: 11px; }
+
+  /* ========== PILLS / BADGES ========== */
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .pill.critical { background: var(--red); color: white; }
+  .pill.high { background: var(--amber); color: white; }
+  .pill.medium { background: var(--gray); color: white; }
+  .pill.low { background: var(--gray-light); color: var(--text); }
+  .pill.strength { background: var(--green); color: white; }
+  .pill.p0 { background: var(--red); color: white; }
+  .pill.p1 { background: var(--amber); color: white; }
+  .pill.p2 { background: var(--blue); color: white; }
+  .pill.lg { padding: 6px 14px; font-size: 12px; }
+
+  /* ========== PATTERN CARDS ========== */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 900px) { .pattern-grid { grid-template-columns: 1fr; } }
+  .pattern {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--gray);
+    transition: all 0.2s;
+  }
+  .pattern.critical { border-left-color: var(--red); }
+  .pattern.high { border-left-color: var(--amber); }
+  .pattern.medium { border-left-color: var(--gray); }
+  .pattern:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .pattern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+  .pattern-title { font-size: 16px; font-weight: 600; color: var(--navy); flex: 1; }
+  .pattern-impact { font-size: 13px; color: var(--text); margin-bottom: 12px; line-height: 1.5; }
+  .pattern-rec { font-size: 13px; color: var(--text-muted); padding: 10px 12px; background: var(--gray-light); border-radius: var(--radius-sm); line-height: 1.5; }
+  .pattern-rec strong { color: var(--green); }
+  .pattern-scope {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--gray-light);
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-top: 10px;
+  }
+
+  /* ========== ROADMAP ========== */
+  .roadmap {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+  }
+  .phase-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 20px;
+    align-items: stretch;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-num {
+    background: var(--navy);
+    color: white;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .phase-num.p1 { background: var(--red); }
+  .phase-num.p2 { background: var(--amber); }
+  .phase-num.p3 { background: var(--blue); }
+  .phase-num.p4 { background: var(--teal); }
+  .phase-num.p5 { background: var(--gray); }
+  .phase-num.p6 { background: var(--green); }
+  .phase-num .small { font-size: 10px; opacity: 0.85; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .phase-num .big { font-size: 24px; line-height: 1; }
+  .phase-content h4 { color: var(--navy); margin-bottom: 4px; }
+  .phase-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+  .phase-bar {
+    height: 8px;
+    background: var(--gray-light);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .phase-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+  }
+  .phase-items { font-size: 13px; color: var(--text); list-style: none; }
+  .phase-items li { padding: 4px 0 4px 18px; position: relative; }
+  .phase-items li::before {
+    content: '';
+    position: absolute;
+    left: 4px; top: 11px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .roadmap-summary {
+    margin-top: 28px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    color: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+  }
+  .roadmap-summary .big { font-size: 26px; font-weight: 700; }
+  .roadmap-summary .small { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+
+  /* ========== RECOMMENDATIONS ========== */
+  .rec-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .rec-tab {
+    padding: 10px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .rec-tab:hover { border-color: var(--blue); color: var(--blue); }
+  .rec-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .rec-tab .count {
+    margin-left: 6px;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+  }
+  .rec-tab:not(.active) .count { background: var(--gray-light); color: var(--text-muted); }
+  .rec-list { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .rec-item {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 60px 1fr 110px 130px;
+    gap: 16px;
+    align-items: center;
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-item:hover { background: var(--gray-light); }
+  .rec-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .rec-meta { font-size: 12px; color: var(--text-muted); }
+  .rec-impact { font-weight: 600; }
+  .rec-impact.fast { color: var(--green); }
+  .rec-impact.fix { color: var(--red); }
+  .rec-impact.gen { color: var(--blue); }
+  @media (max-width: 800px) {
+    .rec-item { grid-template-columns: 60px 1fr; }
+    .rec-item .rec-meta, .rec-item .rec-impact { grid-column: 2; }
+  }
+
+  /* ========== REPORT DRILL-DOWN CARDS ========== */
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1000px) { .report-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px) { .report-grid { grid-template-columns: 1fr; } }
+  .report-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .report-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--blue); }
+  .report-card .header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+  .report-card h4 { font-size: 15px; flex: 1; line-height: 1.3; }
+  .report-card .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+  .report-stat { text-align: center; padding: 10px 4px; background: var(--gray-light); border-radius: var(--radius-sm); }
+  .report-stat .num { font-size: 20px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .report-stat .num.bad { color: var(--red); }
+  .report-stat .num.good { color: var(--green); }
+  .report-stat .label { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .report-card .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .badge-mini {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--gray-light);
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .badge-mini.dq { background: var(--red-light); color: var(--red); }
+  .badge-mini.import { background: var(--green-light); color: var(--green); }
+  .badge-mini.bug { background: var(--red); color: white; }
+  .badge-mini.allbidir { background: var(--amber-light); color: var(--amber); }
+
+  /* ========== MODAL (drill-down detail) ========== */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 38, 64, 0.6);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: var(--radius);
+    max-width: 900px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .modal-header {
+    background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    color: white;
+    padding: 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .modal-header h3 { color: white; margin-bottom: 4px; font-size: 22px; }
+  .modal-header .subtitle { font-size: 13px; opacity: 0.85; }
+  .modal-close {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.3); }
+  .modal-body { padding: 28px; max-height: 70vh; overflow-y: auto; }
+  .modal-body section { margin-bottom: 28px; }
+  .modal-body section:last-child { margin-bottom: 0; }
+  .modal-body h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .summary-callout {
+    background: rgba(46, 117, 182, 0.06);
+    border-left: 4px solid var(--blue);
+    padding: 14px 18px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .snapshot-table { display: grid; grid-template-columns: 1fr 2fr; gap: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  .snapshot-table > div {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .snapshot-table > div:nth-last-child(-n+2) { border-bottom: none; }
+  .snapshot-table > div:nth-child(odd) { background: rgba(46,117,182,0.06); font-weight: 600; color: var(--navy); }
+  table.detail {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.detail th {
+    background: var(--gray-light);
+    color: var(--navy);
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid var(--border);
+  }
+  table.detail td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.detail tr:last-child td { border-bottom: none; }
+  table.detail .pill { font-size: 10px; }
+  .issues-list { list-style: none; }
+  .issues-list li {
+    padding: 8px 0 8px 22px;
+    position: relative;
+    font-size: 13px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .issues-list li:last-child { border-bottom: none; }
+  .issues-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px;
+    width: 12px; height: 2px;
+    background: var(--red);
+    border-radius: 1px;
+  }
+  pre.code {
+    background: #1F2937;
+    color: #E5E7EB;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-family: "SF Mono", Consolas, "Roboto Mono", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    margin-bottom: 10px;
+  }
+  pre.code .kw { color: #93C5FD; }
+  pre.code .com { color: #6EE7B7; font-style: italic; }
+  pre.code .str { color: #FCD34D; }
+  .issue-callout {
+    background: var(--red-light);
+    border-left: 4px solid var(--red);
+    padding: 12px 16px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .issue-callout strong { color: var(--red); }
+  .rec-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    align-items: center;
+  }
+  .rec-row:last-child { border-bottom: none; }
+  .rec-row .effort { font-weight: 600; color: var(--navy); text-align: right; font-size: 12px; }
+  .strength-callout {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    padding: 12px 16px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ========== COMPARISON BAR CHART (custom CSS) ========== */
+  .h-bar {
+    display: grid;
+    grid-template-columns: 130px 1fr 40px;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .h-bar .name { color: var(--navy); font-weight: 500; }
+  .h-bar-track { background: var(--gray-light); border-radius: 100px; height: 22px; overflow: hidden; position: relative; }
+  .h-bar-fill { height: 100%; border-radius: 100px; }
+  .h-bar-fill.bug { background: linear-gradient(90deg, var(--red-light), var(--red)); }
+  .h-bar-fill.dax { background: linear-gradient(90deg, #B6D4F2, var(--blue)); }
+  .h-bar .val { font-weight: 700; color: var(--navy); text-align: right; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--navy-dark);
+    color: rgba(255,255,255,0.75);
+    padding: 32px;
+    text-align: center;
+    font-size: 13px;
+  }
+  footer .brand { color: white; font-weight: 600; margin-bottom: 4px; }
+
+  /* ========== UTILITIES ========== */
+  .small { font-size: 12px; color: var(--text-muted); }
+  .mt-12 { margin-top: 12px; }
+  .mt-20 { margin-top: 20px; }
+  .mt-32 { margin-top: 32px; }
+
+  /* Print */
+  @media print {
+    nav.toc, .modal-backdrop { display: none !important; }
+    main { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      <span>Power BI Health Audit · Final Report</span>
+    </div>
+    <h1>FLEXreport Suite<br><span class="accent">Power BI Health Audit</span></h1>
+    <p class="hero-sub">Engagement-wide review of 15 Power BI reports surfacing performance, correctness and architectural risks — with a phased plan to deliver 5×–50× faster dashboards and eliminate 57 wrong-number bugs.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label">Client</div>
+        <div class="value">Lake Companies</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Programme</div>
+        <div class="value">FLEXreport Suite (15 reports)</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Report date</div>
+        <div class="value">April 28, 2026</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Prepared by</div>
+        <div class="value">Simform</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Total effort</div>
+        <div class="value">~26 days · 5 weeks</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== STICKY NAV ========== -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview" class="active">Overview</a></li>
+    <li><a href="#findings">Headline Findings</a></li>
+    <li><a href="#charts">Visual Snapshot</a></li>
+    <li><a href="#matrix">Comparison Matrix</a></li>
+    <li><a href="#patterns">Cross-Cutting Patterns</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#recommendations">Recommendations</a></li>
+    <li><a href="#reports">Per-Report Detail</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ========== OVERVIEW ========== -->
+<section id="overview">
+  <div class="section-tag">01 · Overview</div>
+  <h2 class="section-title">Where the suite stands today</h2>
+  <p class="section-lead">15 reports were audited live via the Microsoft Tabular semantic-model interface. Headline metrics show a portfolio with strong content but heavy architectural debt — primarily DirectQuery and bidirectional relationships — plus 57 measures producing demonstrably wrong numbers that need immediate attention.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi neutral">
+      <div class="kpi-icon">📊</div>
+      <div class="kpi-value">15</div>
+      <div class="kpi-label">Reports reviewed</div>
+      <div class="kpi-detail">134 tables · 875 measures · 93 relationships</div>
+    </div>
+    <div class="kpi bad">
+      <div class="kpi-icon">⚡</div>
+      <div class="kpi-value">14<span style="font-size:24px;color:var(--text-muted);font-weight:500">/15</span></div>
+      <div class="kpi-label">DirectQuery reports</div>
+      <div class="kpi-detail">Only Inventory has migrated to Import</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-icon">⇄</div>
+      <div class="kpi-value">70<span style="font-size:24px;color:var(--text-muted);font-weight:500">%</span></div>
+      <div class="kpi-label">Bidirectional relationships</div>
+      <div class="kpi-detail">65 of 93 · 19 are Many-to-Many</div>
+    </div>
+    <div class="kpi bad">
+      <div class="kpi-icon">⚠</div>
+      <div class="kpi-value">57</div>
+      <div class="kpi-label">Functional bugs</div>
+      <div class="kpi-detail">In 353 total DAX issues across 875 measures</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FINDINGS ========== -->
+<section id="findings">
+  <div class="section-tag">02 · Headline findings</div>
+  <h2 class="section-title">The five things that matter most</h2>
+  <p class="section-lead">Fixing these five themes captures the majority of the value. Each maps to specific reports and a defined effort.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left: 4px solid var(--red);">
+      <div class="card-header">
+        <span class="pill critical lg">CRITICAL</span>
+        <h3 style="margin:0">DirectQuery dominates</h3>
+      </div>
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;">14 of 15 reports route every query to the source live. Migrating to Import unlocks <strong style="color:var(--green)">5×–50× faster</strong> dashboards.</p>
+      <p class="small"><strong>Effort:</strong> 5–10 days · <strong>Impact:</strong> Suite-wide performance jump</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--red);">
+      <div class="card-header">
+        <span class="pill critical lg">CRITICAL</span>
+        <h3 style="margin:0">19 Many-to-Many cross-filters</h3>
+      </div>
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;">M:M with bidirectional filtering in DirectQuery is the costliest relationship type. 12 of 15 reports have at least one. Inventory Turns and Scheduling have three each.</p>
+      <p class="small"><strong>Effort:</strong> 2–3 days · <strong>Impact:</strong> 25–40% faster</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--red);">
+      <div class="card-header">
+        <span class="pill critical lg">CRITICAL</span>
+        <h3 style="margin:0">57 wrong-number bugs</h3>
+      </div>
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;">Process Scrap PPM operator bug, Util % defaulting to 100% on /0, OVERALL EFFICIENCY duplicate, COSTYTD P-factor, and 53 more. Each shows incorrect figures in dashboards today.</p>
+      <p class="small"><strong>Effort:</strong> ~1.5 days for the top 11 · <strong>Impact:</strong> Correctness</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--amber);">
+      <div class="card-header">
+        <span class="pill high lg">HIGH</span>
+        <h3 style="margin:0">5 reports use only bidirectional</h3>
+      </div>
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;">FIFO/LIFO, Inventory Turns, OEE, Sales, and Scheduling have <strong>zero</strong> single-direction relationships. The most aggressive configuration in the suite.</p>
+      <p class="small"><strong>Effort:</strong> 0.25 day each · <strong>Impact:</strong> 15–25% faster</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--green); grid-column: span 2;">
+      <div class="card-header">
+        <span class="pill strength lg">STRENGTH</span>
+        <h3 style="margin:0">Foundations to preserve</h3>
+      </div>
+      <div class="grid-3">
+        <div>
+          <h4 style="color:var(--green)">Inventory on Import</h4>
+          <p class="small">Largest performance lever already pulled — sets the pattern for the other 14.</p>
+        </div>
+        <div>
+          <h4 style="color:var(--green)">Purchasing's date dims</h4>
+          <p class="small">All 3 date relationships correctly OneDirection — the cleanest config in the suite.</p>
+        </div>
+        <div>
+          <h4 style="color:var(--green)">Job Details fixes shipped</h4>
+          <p class="small">Duplicate fact removed, 47 measures fixed, all bidirectional flipped — already delivered with client consent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== VISUAL SNAPSHOT (CHARTS) ========== -->
+<section id="charts">
+  <div class="section-tag">03 · Visual snapshot</div>
+  <h2 class="section-title">The numbers, at a glance</h2>
+  <p class="section-lead">Charts that show where attention is needed most.</p>
+
+  <div class="grid-2">
+    <div class="chart-card">
+      <h3>Storage mode mix</h3>
+      <div class="subtitle">Only 1 of 15 reports leverages Import (VertiPaq engine)</div>
+      <div class="chart-wrap"><canvas id="storageChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Relationship direction breakdown</h3>
+      <div class="subtitle">93 relationships across the suite — 70% bidirectional</div>
+      <div class="chart-wrap"><canvas id="relChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-2 mt-20">
+    <div class="chart-card">
+      <h3>Functional bugs by report</h3>
+      <div class="subtitle">57 measures producing demonstrably wrong results</div>
+      <div id="bugBars" style="margin-top: 16px;"></div>
+    </div>
+    <div class="chart-card">
+      <h3>DAX issues by report</h3>
+      <div class="subtitle">353 issues across 875 measures (anti-patterns + bugs)</div>
+      <div id="daxBars" style="margin-top: 16px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== COMPARISON MATRIX ========== -->
+<section id="matrix">
+  <div class="section-tag">04 · Comparison matrix</div>
+  <h2 class="section-title">Side-by-side report scorecard</h2>
+  <p class="section-lead">All 15 reports, scored on the dimensions that matter — relationship direction, M:M cost, storage mode, DAX issues, and bugs. Red flags concerns; green indicates strengths.</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Report</th>
+          <th class="center">Tbl</th>
+          <th class="center">Meas</th>
+          <th class="center">Rel</th>
+          <th class="center">BiDir</th>
+          <th class="center">M:M</th>
+          <th class="center">1Dir</th>
+          <th class="center">Storage</th>
+          <th class="center">DAX</th>
+          <th class="center">Bugs</th>
+        </tr>
+      </thead>
+      <tbody id="matrixBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== CROSS-CUTTING PATTERNS ========== -->
+<section id="patterns">
+  <div class="section-tag">05 · Cross-cutting patterns</div>
+  <h2 class="section-title">Issues that span the whole suite</h2>
+  <p class="section-lead">Eleven patterns appear across multiple reports. Each can be fixed once and rolled out, delivering consistent improvement.</p>
+
+  <div class="pattern-grid" id="patternGrid"></div>
+</section>
+
+<!-- ========== ROADMAP ========== -->
+<section id="roadmap">
+  <div class="section-tag">06 · Implementation roadmap</div>
+  <h2 class="section-title">A six-phase plan to deliver value</h2>
+  <p class="section-lead">Correctness first, then structural cleanup, then storage migration. Each phase is independently shippable.</p>
+
+  <div class="roadmap" id="roadmap">
+    <!-- phases injected by JS -->
+  </div>
+
+  <div class="roadmap-summary">
+    <div class="big">Total: 26 working days · ~5 weeks calendar</div>
+    <div class="small">Single Power BI engineer · Parallelisable to ~3–4 weeks with two engineers and a reviewer · Risk-adjusted contingency: +30%</div>
+  </div>
+</section>
+
+<!-- ========== MASTER RECOMMENDATIONS ========== -->
+<section id="recommendations">
+  <div class="section-tag">07 · Recommendations</div>
+  <h2 class="section-title">Master action list</h2>
+  <p class="section-lead">All recommendations across the engagement, organised by priority. Switch tabs to focus on each band.</p>
+
+  <div class="rec-tabs" id="recTabs">
+    <button class="rec-tab active" data-pri="all">All <span class="count" id="cntAll">19</span></button>
+    <button class="rec-tab" data-pri="P0">P0 — Immediate <span class="count" id="cntP0">8</span></button>
+    <button class="rec-tab" data-pri="P1">P1 — Performance <span class="count" id="cntP1">7</span></button>
+    <button class="rec-tab" data-pri="P2">P2 — Hygiene <span class="count" id="cntP2">4</span></button>
+  </div>
+  <div class="rec-list" id="recList"></div>
+</section>
+
+<!-- ========== PER-REPORT DRILL-DOWN ========== -->
+<section id="reports">
+  <div class="section-tag">08 · Per-report detail</div>
+  <h2 class="section-title">Drill into any report</h2>
+  <p class="section-lead">Click a card for the full diagnostic — model snapshot, root causes, relationship audit, DAX issues, code examples, and prioritised recommendations.</p>
+
+  <div class="report-grid" id="reportGrid"></div>
+</section>
+
+</main>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<footer>
+  <div class="brand">Simform · FLEXreport Suite Power BI Health Audit</div>
+  <div>Confidential · Prepared for Lake Companies · April 28, 2026</div>
+</footer>
+
+<script>
+// ============== DATA ==============
+const REPORTS = [
+  { id: '4.1',  name: 'Job Details',       tbl: 13, cols: 387, meas: 233, rel: 10, bidir: 10, mm: 1, oneDir: 0,  storage: 'DirectQuery', dax: 47, bugs: 24, lvl: 1600,
+    summary: 'The starting state of the engagement. 13 tables, 233 measures, all 10 relationships bidirectional, two near-identical fact tables, six separate date dimensions, M:M Goals relationship, mathematical bug in [Process Scrap PPM], and 23 "New" measures silently reading the OLD fact table.' },
+  { id: '4.2',  name: 'Accounting',        tbl: 10, cols: 93,  meas: 33,  rel: 5,  bidir: 4,  mm: 0, oneDir: 1,  storage: 'DirectQuery', dax: 21, bugs: 1,  lvl: 1600,
+    summary: '10 tables (3 hidden GUID-named orphans). 33 measures, 4 of 5 relationships bidirectional. [Budget Variance] mixes YTD with non-YTD — apples and oranges. Inconsistent YTD construction across 5 measures.' },
+  { id: '4.3',  name: 'Bookings',          tbl: 10, cols: 251, meas: 65,  rel: 6,  bidir: 5,  mm: 1, oneDir: 1,  storage: 'DirectQuery', dax: 25, bugs: 2,  lvl: 1601,
+    summary: 'Compatibility level 1601 (one higher than the others). [backlognetmargin_format] is dead code (DIVIDE(x, 1)). Two color-code measures effectively duplicate via the no-op wrapper. 5 of 6 relationships bidirectional, including M:M Goals.' },
+  { id: '4.4',  name: 'Commissions',       tbl: 7,  cols: 107, meas: 18,  rel: 5,  bidir: 4,  mm: 1, oneDir: 1,  storage: 'DirectQuery', dax: 15, bugs: 0,  lvl: 1600,
+    summary: 'Compact: 7 tables, 18 measures. M:M between Orders and Commissions Facts with BothDirections. No proper Date dimension — date columns embedded in 1Commissions. [Comm Percent] uses bare division.' },
+  { id: '4.5',  name: 'DAILY Labor',       tbl: 7,  cols: 152, meas: 56,  rel: 5,  bidir: 3,  mm: 1, oneDir: 2,  storage: 'DirectQuery', dax: 17, bugs: 2,  lvl: 1600,
+    summary: '7 tables, 56 measures. 2/5 single-direction. [z List of Trans Date values] is misnamed — it queries the LT Rpt Date column, not Trans Date. Functionally identical to [List of LT Rpt Date values].' },
+  { id: '4.6',  name: 'Downtime',          tbl: 6,  cols: 111, meas: 18,  rel: 3,  bidir: 2,  mm: 0, oneDir: 1,  storage: 'DirectQuery', dax: 16, bugs: 0,  lvl: 1600,
+    summary: 'Smallest model (6 tables, 18 measures). Hidden orphan "1Labour Transactions" loaded but unused. Duplicate measure pairs ([Planned Downtime] vs [Planned Downtime 1]) use different aggregation patterns and may diverge.' },
+  { id: '4.7',  name: 'FIFO/LIFO',         tbl: 6,  cols: 110, meas: 42,  rel: 4,  bidir: 4,  mm: 2, oneDir: 0,  storage: 'DirectQuery', dax: 31, bugs: 5,  lvl: 1600,
+    summary: 'All 4 relationships bidirectional, 2 M:M through Items hub. ZERO single-direction relationships — most aggressive config in the engagement. Five measures named "Avg ..." use SUM, not AVERAGE.' },
+  { id: '4.8',  name: 'Inventory',         tbl: 21, cols: 346, meas: 50,  rel: 18, bidir: 4,  mm: 2, oneDir: 14, storage: 'Import',      dax: 15, bugs: 1,  lvl: 1600,
+    summary: 'Only IMPORT-mode model in the engagement. But Auto Date/Time enabled creates 15 hidden date tables (~112 redundant columns). Two stacked M:M relationships through Item Whse Loc. [List of Buyer values] queries the Item Status column.' },
+  { id: '4.9',  name: 'Inventory Turns',   tbl: 6,  cols: 145, meas: 56,  rel: 4,  bidir: 3,  mm: 3, oneDir: 1,  storage: 'DirectQuery', dax: 16, bugs: 1,  lvl: 1600,
+    summary: "Three M:M relationships, all BothDirections. [Last Record] references a 'Date' table that doesn't exist in this model — visuals using it error out at evaluation. [Inv Turns -C] has dead-code \"+0\"." },
+  { id: '4.10', name: 'Labor',             tbl: 8,  cols: 156, meas: 67,  rel: 5,  bidir: 3,  mm: 1, oneDir: 2,  storage: 'DirectQuery', dax: 23, bugs: 3,  lvl: 1600,
+    summary: '8 tables, 67 measures. [Rate Variance] and [StdDist] reference COLUMNS as if they were measures — only return correct values inside row-context visuals. [z Title] has duplicate WC Dept entry. 2/5 single-direction.' },
+  { id: '4.11', name: 'Machine Dashboard', tbl: 8,  cols: 205, meas: 35,  rel: 6,  bidir: 4,  mm: 0, oneDir: 1,  storage: 'DirectQuery', dax: 16, bugs: 5,  lvl: 1600,
+    summary: 'Most correctness issues per measure. [OVERALL EFFICIENCY] is verbatim duplicate of [Oper Eff]. Pre-computed rate columns summed instead of recomputed (3 measures). [Elapsed DownTime] has string-concat typo. Hardcoded UTC-6 offset.' },
+  { id: '4.12', name: 'OEE',               tbl: 6,  cols: 105, meas: 37,  rel: 4,  bidir: 4,  mm: 2, oneDir: 0,  storage: 'DirectQuery', dax: 18, bugs: 3,  lvl: 1600,
+    summary: '[Util %] returns 100% on divide-by-zero — that false 100% multiplies into [OEE], inflating headline equipment effectiveness for resources missing shift data. Two AVERAGE-rate measures wrong at any aggregation. Zero single-direction.' },
+  { id: '4.13', name: 'Purchasing',        tbl: 9,  cols: 155, meas: 60,  rel: 7,  bidir: 4,  mm: 1, oneDir: 3,  storage: 'DirectQuery', dax: 25, bugs: 4,  lvl: 1600,
+    summary: 'Better-configured than most: 3 of 7 relationships single-direction (all date dims). [# of Receipts] formula mathematically wrong (COUNT - COUNTBLANK). [% Cost Variance] vs [% Cost Var] confusion. Duplicate PO Due FY list measures.' },
+  { id: '4.14', name: 'Sales',             tbl: 8,  cols: 169, meas: 68,  rel: 6,  bidir: 6,  mm: 1, oneDir: 0,  storage: 'DirectQuery', dax: 35, bugs: 3,  lvl: 1600,
+    summary: 'Largest model by measure count (68). Visible typo "Delviery" in two measure names. [color code COSTYTD] has buggy P-factor (extra division not in parallel SALESYTD). All 6 relationships bidirectional. No proper Date dimension.' },
+  { id: '4.15', name: 'Scheduling',        tbl: 9,  cols: 197, meas: 37,  rel: 5,  bidir: 5,  mm: 3, oneDir: 0,  storage: 'DirectQuery', dax: 33, bugs: 3,  lvl: 1600,
+    summary: "Three M:M relationships through JobOperKey. Orphan 'latejobs' table loaded but unused. Mass DIVIDE(SUM, [Sched Hours Count], 0) pattern across 14 measures — needs business confirmation. Duplicate Planned Utilization variants." },
+];
+
+// Per-report rich data (root causes / relationships / dax / examples / recommendations)
+const REPORT_DETAIL = {
+  '4.1': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every table', 'All 13 tables including six date dims are DirectQuery. Every visual generates SQL.'],
+      ['High', 'All 10 relationships bidirectional', 'Multiplies SQL complexity especially across the six date tables.'],
+      ['High', 'Duplicate fact table', 'Job Details Facts ≈ Job Details Facts New. Visuals using both scan twice.'],
+      ['Critical', '[Process Scrap PPM] mathematical bug', 'Operator-precedence error: (Scrap/Complete + Scrap) × 1M instead of Scrap/(Complete+Scrap) × 1M.'],
+      ['Critical', '23 "New" measures silently read OLD table', 'Cost Var *, Lbr Hrs Var *, Efficiency % * variants reference OLD fact table base measures.'],
+    ],
+    relationships: [
+      ['2Jobs[OperStartDate]', 'Oper Start Date', 'M:1', 'BothDirections'],
+      ['2Jobs[OperEndDate]', 'Oper End Date', 'M:1', 'BothDirections'],
+      ['2Jobs[JobDate]', 'Job Date', 'M:1', 'BothDirections'],
+      ['Goals[Site]', '1Job Details[Site]', 'M:M', 'BothDirections'],
+      ['Job Details Facts[KeyJobs]', '2Jobs', 'M:1', 'BothDirections'],
+      ['Job Details Facts[RowPointer]', '1Job Details', '1:1', 'BothDirections (mandatory)'],
+    ],
+    daxIssues: [
+      'Mathematical bug in [Process Scrap PPM] — wrong operator grouping',
+      '23 "New" measures silently sum from the OLD fact table',
+      '12 IF-BLANK-division patterns should be DIVIDE()',
+      'AVERAGEA on integer columns (JobStartLateDays, JobEndLateDays)',
+      '[color code JT] re-evaluates [Avg Job Thruput] three times per row',
+    ],
+    examples: [{
+      title: '[Process Scrap PPM] — operator-precedence bug',
+      code: 'if ([Oper Qty Scrapped] = 0, 0,\n    ([Oper Qty Scrapped] / [Oper Qty Complete] + [Oper Qty Scrapped])) * 1000000',
+      issue: 'The parentheses group (Scrap/Complete + Scrap) instead of Scrap/(Complete+Scrap). Returns mathematically wrong PPM in every dashboard.',
+    }],
+    recommendations: [
+      ['P0', 'Fix [Process Scrap PPM] operator-precedence bug', '0.05 day'],
+      ['P0', 'Repoint 23 "New" measures to read the New fact table', '0.5 day'],
+      ['P0', 'Delete one of the two duplicate fact tables', '0.5 day'],
+      ['P0', 'Migrate to Import mode (biggest performance lever)', '1 day'],
+      ['P1', 'Consolidate six date dimensions into one role-playing Calendar', '1 day'],
+    ],
+    note: 'Optimisations on this report were already applied (with client consent) — duplicate fact deleted, all bidirectional flipped, 47 measures fixed.',
+  },
+  '4.2': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every fact and dim', 'All seven user-facing tables are DirectQuery.'],
+      ['High', '[Budget Variance] mixes YTD and non-YTD', '[Net Income YTD] - [Budget]. Affects Budget Var % downstream.'],
+      ['High', 'Bidirectional cross-filtering on 4 of 5 relationships', 'Customers, Vendors, SortTable + 1:1. Only Date is correctly OneDirection.'],
+      ['Medium', '3 hidden GUID-named orphan tables', 'Inferred source, NoData state — leftover Power BI internal tables.'],
+    ],
+    relationships: [
+      ['Accounting Facts[KeyCust]', 'Customers', 'M:1', 'BothDirections'],
+      ['Accounting Facts[MergedKeyVend]', 'Vendors', 'M:1', 'BothDirections'],
+      ['Accounting[KeyDate]', 'Date', 'M:1', 'OneDirection ✓'],
+      ['Accounting[RowPointer]', 'Accounting Facts', '1:1', 'BothDirections (mandatory)'],
+      ['Accounting[Account Type]', 'SortTable', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      '[Budget Variance] mixes YTD with non-YTD inputs',
+      'Five YTD measures use two different patterns (ALLEXCEPT vs FILTER(ALL))',
+      '11 copy-pasted "List of" filter-title measures',
+      '[Title] re-evaluates 11 sub-measures per render',
+    ],
+    examples: [{
+      title: '[Budget Variance] mixes YTD and non-YTD',
+      code: 'Budget Variance = [Net Income YTD] - [Budget]\nPlan Variance   = [Net Income]     - [Plan]    -- correct pattern',
+      issue: 'Budget Variance compares YTD Net Income to full-period Budget — apples and oranges. Affects Budget Var % downstream.',
+    }],
+    recommendations: [
+      ['P0', 'Fix [Budget Variance] formula and align YTD pattern', '0.5 day'],
+      ['P0', 'Change Customers, Vendors, SortTable to OneDirection', '0.25 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P1', 'Merge Accounting + Accounting Facts (1:1 join)', '0.5 day'],
+    ],
+  },
+  '4.3': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every visible table', 'All eight user-facing tables.'],
+      ['High', '[backlognetmargin_format] is dead code', 'DIVIDE(x, 1) returns input unchanged.'],
+      ['Critical', 'M:M Goals ↔ 1Bookings', 'Most expensive relationship type.'],
+      ['High', 'Duplicate color-code measures', 'BKLGMGN and BKLGMGN_2 produce identical values via different paths.'],
+    ],
+    relationships: [
+      ['Goals[Site]', '1Bookings[Site]', 'M:M', 'BothDirections'],
+      ['Bookings Facts[KeyBTCust]', 'Bill To', 'M:1', 'BothDirections'],
+      ['Bookings Facts[KeyOrder]', 'Orders', 'M:1', 'OneDirection ✓'],
+      ['1Bookings[RowPointer]', 'Bookings Facts', '1:1', 'BothDirections (mandatory)'],
+    ],
+    daxIssues: [
+      '[backlognetmargin_format] = DIVIDE(x, 1) — dead code',
+      'Duplicate [color code BKLGMGN] / [color code BKLGMGN_2]',
+      '[Daily Shipments] hardcodes /(90/7*5) magic number',
+      '[SIFOT %] uses lowercase "dIVIDE" function name',
+    ],
+    examples: [{
+      title: '[backlognetmargin_format] — dead code',
+      code: 'backlognetmargin_format = DIVIDE([Backlog Net Margin %], 1)',
+      issue: 'Divides by 1, returning input unchanged. Drives [color code BKLGMGN_2] which then duplicates [color code BKLGMGN].',
+    }],
+    recommendations: [
+      ['P0', 'Delete [backlognetmargin_format] and [color code BKLGMGN_2]', '0.05 day'],
+      ['P0', 'Resolve M:M Goals ↔ 1Bookings', '0.5 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.4': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every table', 'All 7 tables.'],
+      ['Critical', 'M:M Orders ↔ Commissions Facts', 'Most expensive relationship type.'],
+      ['High', 'No proper Date dimension', 'Date attributes live as columns inside 1Commissions.'],
+      ['Medium', '[Comm Percent] missing DIVIDE protection', 'Vulnerable to #DIV/0.'],
+    ],
+    relationships: [
+      ['Commissions Facts[CustBillKey]', 'Bill To Cust', 'M:1', 'BothDirections'],
+      ['Commissions Facts[RepKey]', 'Sales Reps', 'M:1', 'BothDirections'],
+      ['Orders[OrderKey]', 'Commissions Facts[OrderKey]', 'M:M', 'BothDirections'],
+      ['Commissions Facts[CustKey]', 'Ship To Cust', 'M:1', 'OneDirection ✓'],
+    ],
+    daxIssues: [
+      '[Comm Percent] missing DIVIDE() protection',
+      '11 copy-pasted "List of" measures',
+      'Two "List of" measures missing IF(ISFILTERED) guard',
+    ],
+    examples: [{
+      title: '[Comm Percent] — bare division',
+      code: "Comm Percent = sum('Commissions Facts'[Inv_Comm_Amt])\n             / sum('Commissions Facts'[Slsp_Comm_Base])",
+      issue: 'Returns #DIV/0! when Slsp_Comm_Base sums to zero. Use DIVIDE(num, den, 0).',
+    }],
+    recommendations: [
+      ['P0', 'Resolve M:M Orders relationship', '0.5 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P1', 'Add proper Date dimension', '0.5 day'],
+    ],
+  },
+  '4.5': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every table', 'All 7 tables.'],
+      ['Critical', 'M:M Goals ↔ 1Labor Transactions', 'Most expensive relationship type.'],
+      ['High', '[z List of Trans Date values] is misnamed and duplicate', 'Queries LT Rpt Date column, not Trans Date.'],
+    ],
+    relationships: [
+      ['1Labor Transactions[Trans_Date]', 'Trans Date', 'M:1', 'OneDirection ✓'],
+      ['1Labor Transactions[LT_Rpt_Date]', 'LT Rpt Date', 'M:1', 'BothDirections'],
+      ['Goals[Site]', '1Labor Transactions[Site]', 'M:M', 'BothDirections'],
+      ['Labor Transactions Facts[KeyJob]', 'Jobs', 'M:1', 'OneDirection ✓'],
+    ],
+    daxIssues: [
+      '[z List of Trans Date values] queries wrong column',
+      '[z Title] always emits Date line — no ISFILTERED guard',
+      '[Qty Received] uses AVERAGE (siblings use SUM)',
+    ],
+    examples: [{
+      title: '[z List of Trans Date values] — misnamed',
+      code: "z List of Trans Date values =\nVAR __DC = DISTINCTCOUNT('LT Rpt Date'[LT Rpt Date])  -- queries LT Rpt Date, not Trans Date!",
+      issue: 'Functionally identical to [List of LT Rpt Date values]. Either rename, repoint, or delete the duplicate.',
+    }],
+    recommendations: [
+      ['P0', 'Fix [z List of Trans Date values] naming + remove duplicate', '0.25 day'],
+      ['P0', 'Resolve M:M Goals relationship', '0.5 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.6': {
+    rootCauses: [
+      ['Critical', 'DirectQuery on every table', 'All 6 tables.'],
+      ['High', 'Duplicate measure pairs may diverge', '[Planned Downtime] (SUMX/MAX-per-RowPointer) vs [Planned Downtime 1] (plain SUM).'],
+      ['Medium', 'Hidden orphan "1Labour Transactions"', '33 columns, no relationships, never used.'],
+    ],
+    relationships: [
+      ['1Downtime[RowPointer]', 'Lc Ea Downtime Facts View', '1:1', 'BothDirections (mandatory)'],
+      ['Lc Ea Downtime Facts View[KeyJob]', 'Jobs', 'M:1', 'OneDirection ✓'],
+      ['1Downtime[Work Date]', 'Work Date', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      'Duplicate measure pairs: [Planned Downtime] vs [Planned Downtime 1]',
+      'Defensive SUMX/VALUES/MAX over 1:1 — unnecessary',
+      'Hidden orphan table 1Labour Transactions',
+    ],
+    examples: [{
+      title: 'Duplicate measure pairs',
+      code: "Planned Downtime   = SUMX(VALUES([RowPointer]),\n                          CALCULATE(MAX([plannedDowntime])))\nPlanned Downtime 1 = SUM([PlannedDowntime])",
+      issue: 'Two measures, two names, two computation patterns. Return the same value when the underlying view is clean — but diverge if duplicates exist.',
+    }],
+    recommendations: [
+      ['P0', 'Resolve duplicate measure pairs', '0.25 day'],
+      ['P0', 'Delete hidden orphan 1Labour Transactions', '0.05 day'],
+      ['P0', 'Migrate to Import mode', '0.5 day'],
+    ],
+  },
+  '4.7': {
+    rootCauses: [
+      ['Critical', 'Two stacked M:M relationships through Items hub', 'Item Whse Loc ↔ Items and Item Lifo Fifo ↔ Items both M:M BothDirections.'],
+      ['High', 'Zero single-direction relationships', 'All 4 BothDirections.'],
+      ['High', 'Five "Avg ..." measures use SUM (not AVERAGE)', 'Naming misleads readers.'],
+    ],
+    relationships: [
+      ['Item Whse Loc[DateItemKey]', 'Items[DateItemKey]', 'M:M', 'BothDirections'],
+      ['Items[DateKey]', 'Fiscal Year[DateKey]', 'M:1', 'BothDirections'],
+      ['Item Lifo Fifo[DateItemKey]', 'Items[DateItemKey]', 'M:M', 'BothDirections'],
+      ['Items[ItemKey]', '1Items[ItemKey]', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      'Five "Avg ..." measures use SUM — naming misleads',
+      '10 cross-table column references in 1Items measures',
+      '[Last Record] FILTER over whole table',
+      'Typo [Mat lCost]',
+    ],
+    examples: [{
+      title: '"Avg ..." measures using SUM',
+      code: 'Avg Matl Cost = SUM(Items[Avg_Matl_Cost])\nAvg Lbr Cost  = SUM(Items[Avg_Lbr_Cost])',
+      issue: 'Each is named "Avg ..." but uses SUM. If the underlying column stores a per-row average, sum-of-averages is mathematically meaningless.',
+    }],
+    recommendations: [
+      ['P0', 'Resolve two M:M relationships through Items', '0.5–1 day'],
+      ['P0', 'Confirm intent of five "Avg ..." measures', '0.25 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.8': {
+    rootCauses: [
+      ['Critical', 'Auto Date/Time creates 15 hidden date tables', '~112 redundant columns inflate model size and refresh time.'],
+      ['High', 'Two M:M relationships through Item Whse Loc', 'Specific Cost ↔ Item Whse Loc and Item Whse Loc ↔ 1Items.'],
+      ['High', '[List of Buyer values] queries Item Status column', 'Misleading name.'],
+      ['Strength', 'Already in Import mode', 'Significantly ahead of all 14 other reports.'],
+    ],
+    relationships: [
+      ['Specific Cost[DateItemKey]', 'Item Whse Loc', 'M:M', 'BothDirections'],
+      ['1Items[KeyItem]', 'Items', 'M:1', 'BothDirections'],
+      ['Item Whse Loc[DateItemKey]', '1Items', 'M:M', 'BothDirections'],
+      ['1Items[DateKey]', 'Fiscal Year', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      'Auto Date/Time bloat — 15 hidden tables, ~112 columns',
+      '[List of Buyer values] queries Item Status column',
+      '[Last Record] FILTER over whole table',
+    ],
+    examples: [{
+      title: 'Auto Date/Time bloat',
+      code: 'Hidden tables auto-generated by Power BI:\n  - DateTableTemplate_e53f15dd-...\n  - LocalDateTable_ed1952e9-...   (1Items[CreateDate])\n  - LocalDateTable_9301736e-...   (1Items[processed_at])\n  - ... (12 more)',
+      issue: 'One 8-column hidden DateTable per date column. Disable Auto Date/Time and rely on the existing Fiscal Year table.',
+    }],
+    recommendations: [
+      ['P0', 'Disable Auto Date/Time + delete 15 hidden tables', '0.25 day'],
+      ['P0', 'Resolve two M:M relationships', '0.5–1 day'],
+      ['P0', 'Rename [List of Buyer values]', '0.05 day'],
+    ],
+    note: 'Strength: This is the only report already on Import mode — significantly ahead of the rest of the suite.',
+  },
+  '4.9': {
+    rootCauses: [
+      ['Critical', "[Last Record] references non-existent 'Date' table", 'Likely copy-paste from Inventory report. Visuals using it fail.'],
+      ['Critical', 'Three M:M relationships, all BothDirections', 'Goals ↔ Fiscal Year, Item Whse Loc ↔ Items, Items ↔ Fiscal Year.'],
+      ['High', 'Goals → Fiscal Year filter path is unusual', 'Goals normally filters facts, not date dimensions.'],
+    ],
+    relationships: [
+      ['Goals[Site]', 'Fiscal Year[Site]', 'M:M', 'BothDirections'],
+      ['Item Whse Loc[KeyDateItem]', 'Items[DateItemKey]', 'M:M', 'BothDirections'],
+      ['Items[ItemKey]', '1Items[ItemKey]', 'M:1', 'OneDirection ✓'],
+      ['Items[DateKey]', 'Fiscal Year[KeyDate]', 'M:M', 'BothDirections'],
+    ],
+    daxIssues: [
+      "[Last Record] references 'Date' table — doesn't exist (broken)",
+      'Three M:M relationships, all BothDirections',
+      'Bare division in [Whse Inv Value - Ave]',
+    ],
+    examples: [{
+      title: '[Last Record] — broken table reference',
+      code: "Last Record =\nCALCULATE( MAX('Date'[RecordDateTEXT]),       -- 'Date' doesn't exist!\n           FILTER('Items', [Latest]=\"Y\") )",
+      issue: "Model has 'Fiscal Year', not 'Date'. Any visual using [Last Record] fails.",
+    }],
+    recommendations: [
+      ['P0', "Fix [Last Record] table reference", '0.1 day'],
+      ['P0', 'Resolve three M:M relationships', '0.5–1 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.10': {
+    rootCauses: [
+      ['High', '[Rate Variance] / [StdDist] reference columns as measures', 'Fail outside row context.'],
+      ['High', '[z Title] duplicate WC Dept entry with wrong reference', 'WC Dept appears twice in title bar.'],
+      ['Critical', 'DirectQuery on every data table', '7 of 8 tables.'],
+      ['High', 'M:M Goals ↔ 1Labor Transactions', 'Most expensive relationship type.'],
+    ],
+    relationships: [
+      ['1Labor Transactions[RowPointer]', 'Labor Transactions Facts', '1:1', 'BothDirections (mandatory)'],
+      ['Labor Transactions Facts[KeyJob]', 'Jobs', 'M:1', 'OneDirection ✓'],
+      ['1Labor Transactions[LT_Rpt_Date]', 'LT Rpt Date', 'M:1', 'BothDirections'],
+      ['Goals[Site]', '1Labor Transactions[Site]', 'M:M', 'BothDirections'],
+      ['1Labor Transactions[Trans_Date]', 'Trans Date', 'M:1', 'OneDirection ✓'],
+    ],
+    daxIssues: [
+      '[Rate Variance] / [StdDist] reference columns as measures',
+      '[z Title] duplicate WC Dept entry',
+      '5 color-code measures evaluate base 3× per row',
+    ],
+    examples: [{
+      title: '[Rate Variance] — columns masquerading as measures',
+      code: 'Rate Variance = DIVIDE(([MEAN Act] - [MEAN Pln]), [MEAN Pln], 0)',
+      issue: '[MEAN Act], [MEAN Pln] are columns, not measures. Only works inside row-context visuals.',
+    }],
+    recommendations: [
+      ['P0', 'Fix [Rate Variance] and [StdDist]', '0.25 day'],
+      ['P0', 'Fix [z Title] WC Dept duplication', '0.1 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.11': {
+    rootCauses: [
+      ['High', '[OVERALL EFFICIENCY] verbatim duplicate of [Oper Eff]', 'Identical formula, two names.'],
+      ['High', 'Pre-computed rates summed (3 measures)', '[Pcs Per Hour], [Hrs Per Piece], [Ave Pcs Per Hr] — wrong above source row.'],
+      ['High', '[Elapsed DownTime] string-concat typo', 'Returns "X hours & Y minutes" with literal "&".'],
+      ['Medium', 'Hardcoded UTC-6 offset', 'Wrong during DST.'],
+    ],
+    relationships: [
+      ['1Job Tran Qty[Trans Date]', 'Trans Date', 'M:1', 'BothDirections'],
+      ['1Job Tran Qty[KeyDT]', 'DTReason', 'M:1', 'OneDirection ✓'],
+      ['Job Tran Qty Detail[KeyJob]', 'Orders', 'M:1', 'BothDirections'],
+      ['Job Tran Qty Detail[KeyJob]', 'Jobs', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      '[OVERALL EFFICIENCY] = [Oper Eff] verbatim duplicate',
+      '[Pcs Per Hour] / [Hrs Per Piece] / [Ave Pcs Per Hr] sum or average pre-computed rates',
+      '[Elapsed DownTime] string typo with literal "&"',
+      'Hardcoded UTC-6 offset in [Elapsed Run Time]',
+    ],
+    examples: [{
+      title: 'Pre-computed rates summed',
+      code: "Pcs Per Hour  = SUM([PcsPerHour])\nHrs Per Piece = SUM([HrsPerPiece])",
+      issue: 'Summing per-row rates gives the sum of all the per-row rates, not the rate for the slice. Mathematically wrong above source row.',
+    }],
+    recommendations: [
+      ['P0', 'Delete [OVERALL EFFICIENCY] duplicate', '0.05 day'],
+      ['P0', 'Replace summed rates with rates from totals', '0.25 day'],
+      ['P0', 'Fix [Elapsed DownTime] string typo', '0.1 day'],
+    ],
+  },
+  '4.12': {
+    rootCauses: [
+      ['Critical', '[Util %] defaults to 1 (100%) on /0', 'Returns full utilisation when ResourceAvail is zero. Inflates [OEE] headline.'],
+      ['Critical', 'All 4 relationships bidirectional, 2 M:M', 'Zero single-direction.'],
+      ['High', '[Operating Time] crosses 3 tables', 'Hosted in Labor Trans, sums from Shift Availability and Downtime.'],
+      ['High', 'AVERAGE pre-computed rates wrong at any aggregation', '[Machine Hrs Per Piece] / [Labor Hrs Per Piece].'],
+    ],
+    relationships: [
+      ['Labor Trans[KeyShift]', 'Shift Availability', 'M:M', 'BothDirections'],
+      ['Shift Availability[KeyShift]', 'Downtime', 'M:M', 'BothDirections'],
+      ['1Shift Availability[RowPointer]', 'Shift Availability', '1:1', 'BothDirections (mandatory)'],
+      ['Shift Availability[Trans Date]', 'Date', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      '[Util %] returns 100% on /0 — false positive in OEE',
+      'AVERAGE per-row rates wrong at aggregation',
+      '[Operating Time] crosses 3 tables',
+    ],
+    examples: [{
+      title: '[Util %] — 100% false positive',
+      code: "Util % = DIVIDE([Operating Time], SUM([ResourceAvail]), 1)\nOEE    = [Performance %] * [Util %] * [Quality %]",
+      issue: 'When ResourceAvail is zero, Util % returns 1 (100%) — false 100% multiplies straight into headline OEE.',
+    }],
+    recommendations: [
+      ['P0', 'Change [Util %] default from 1 to 0', '0.05 day'],
+      ['P0', 'Replace AVERAGE rate measures with rates from totals', '0.25 day'],
+      ['P0', 'Resolve two M:M and Date bidirection', '0.5–1 day'],
+    ],
+  },
+  '4.13': {
+    rootCauses: [
+      ['High', '[# of Receipts] mathematically wrong', "COUNT - COUNTBLANK doesn't compute any sensible figure."],
+      ['High', '[% Cost Variance] vs [% Cost Var] confusion', 'Near-identical names, different bases.'],
+      ['High', 'M:M Goals ↔ POs', 'Most expensive relationship type.'],
+      ['Strength', '3 date dim relationships correctly OneDirection', 'OrderDate, TransDate, DueDate all properly configured.'],
+    ],
+    relationships: [
+      ['Goals[Site]', 'POs[Site]', 'M:M', 'BothDirections'],
+      ['Purchase Order Facts[KeyPO]', 'POs', 'M:1', 'BothDirections'],
+      ['Purchase Order Facts[KeyVend]', 'Vendors', 'M:1', 'BothDirections'],
+      ['POs[PO Order Date]', 'OrderDate', 'M:1', 'OneDirection ✓'],
+      ['1Purchase Orders[Trans Date]', 'TransDate', 'M:1', 'OneDirection ✓'],
+      ['POs[PO Ln Rel Due Date]', 'DueDate', 'M:1', 'OneDirection ✓'],
+    ],
+    daxIssues: [
+      '[# of Receipts] = COUNT - COUNTBLANK — mathematically wrong',
+      '[% Cost Variance] vs [% Cost Var] — different bases',
+      'Duplicate PO Due FY list measures',
+    ],
+    examples: [{
+      title: '[# of Receipts] — mathematically wrong',
+      code: "# of Receipts = COUNT('Purchase Order Facts'[Tran_Qty])\n              - COUNTBLANK('Purchase Order Facts'[Tran_Qty])",
+      issue: 'COUNT already excludes blanks. Subtracting COUNTBLANK gives non-blank-count minus blank-count — meaningless.',
+    }],
+    recommendations: [
+      ['P0', 'Fix [# of Receipts] (use plain COUNT)', '0.05 day'],
+      ['P0', 'Disambiguate [% Cost Variance] vs [% Cost Var]', '0.1 day'],
+      ['P0', 'Resolve M:M Goals ↔ POs', '0.5 day'],
+    ],
+    note: 'Strength: 3 of 7 relationships are correctly OneDirection — the cleanest configuration in the suite.',
+  },
+  '4.14': {
+    rootCauses: [
+      ['High', 'Visible typo "Delviery" in 2 measure names', '[On-Time Delviery] and [On-Time Delviery to Promise].'],
+      ['Critical', '[color code COSTYTD] buggy P-factor', 'Extra division not in parallel SALESYTD measure.'],
+      ['Critical', 'All 6 relationships bidirectional, 1 M:M', 'Zero single-direction.'],
+      ['High', 'No proper Date dimension', 'Date attributes inside 1Sales table.'],
+    ],
+    relationships: [
+      ['Sales Facts[KeyBTCust]', 'Bill To', 'M:1', 'BothDirections'],
+      ['Goals[Site]', '1Sales[Site]', 'M:M', 'BothDirections'],
+      ['Sales Facts[KeySTCust]', 'Ship To', 'M:1', 'BothDirections'],
+      ['Sales Facts[KeyItem]', 'Items', 'M:1', 'BothDirections'],
+      ['Sales Facts[KeyOrder]', 'Orders', 'M:1', 'BothDirections'],
+      ['1Sales[RowPointer]', 'Sales Facts', '1:1', 'BothDirections (mandatory)'],
+    ],
+    daxIssues: [
+      'Visible typo "Delviery" in 2 measure names',
+      '[color code COSTYTD] buggy P-factor',
+      '11 color-code measures evaluate base 3× per row',
+      'Bare division in 4 measures',
+    ],
+    examples: [{
+      title: '[color code COSTYTD] — buggy P-factor',
+      code: '-- SALESYTD (canonical):\nVAR P = CALCULATE(DAY(TODAY()) / DAY(EOMONTH(TODAY(),0)))\n      + ...\n\n-- COSTYTD (buggy — extra division):\nVAR P = CALCULATE(DAY(TODAY()) / DAY(EOMONTH(TODAY(),0)))\n      / CALCULATE(DAY(EOMONTH(TODAY(),0)))   -- shouldn\'t be here\n      + ...',
+      issue: 'Cost variant divides the period-elapsed fraction by days-in-month a second time. P factor several orders of magnitude smaller than intended.',
+    }],
+    recommendations: [
+      ['P0', 'Fix "Delviery" typo in 2 measure names', '0.05 day'],
+      ['P0', 'Fix [color code COSTYTD] P-factor math', '0.1 day'],
+      ['P0', 'Change all dim relationships to OneDirection', '0.25 day'],
+      ['P0', 'Migrate to Import mode', '1 day'],
+    ],
+  },
+  '4.15': {
+    rootCauses: [
+      ['Critical', 'Three M:M relationships through JobOperKey', 'Customer ↔ 1Schedule, Customer Orders ↔ Schedule Facts View, Customer Orders ↔ Job.'],
+      ['High', 'Mass per-row averaging via [Sched Hours Count]', '14 measures divide SUM by COUNT(Sched_Hours) — produces "average per scheduled-hour row".'],
+      ['High', 'Duplicate Planned Utilization measures', '[Planned Utilization] (default 0) vs [PlannedUtilization1] (default BLANK).'],
+      ['Medium', "Orphan 'latejobs' table", 'No relationships, no measures reference it.'],
+    ],
+    relationships: [
+      ['Customer[JobOperKey]', '1Schedule[JobOperKey]', 'M:M', 'BothDirections'],
+      ['1Schedule[RowPointer]', 'Schedule Facts View', '1:1', 'BothDirections (mandatory)'],
+      ['Customer Orders[JobOperKey]', 'Schedule Facts View', 'M:M', 'BothDirections'],
+      ['Customer Orders[JobOperKey]', 'Job', 'M:M', 'BothDirections'],
+      ['1Schedule[DailySched]', 'Date', 'M:1', 'BothDirections'],
+    ],
+    daxIssues: [
+      'Duplicate [Planned Utilization] vs [PlannedUtilization1]',
+      'Mass DIVIDE(SUM, [Sched Hours Count], 0) pattern × 14 measures',
+      '[Days Projected Past Due] uses bare SELECTEDVALUE',
+    ],
+    examples: [{
+      title: 'Mass per-row averaging pattern',
+      code: '-- 14 measures all use this pattern:\nRemaining Run = DIVIDE(SUM([RemainingRun]), [Sched Hours Count], 0)\nDaysLate      = DIVIDE(SUM([Days_Late]),    [Sched Hours Count], 0)\n\nSched Hours Count = COUNT([Sched_Hours])',
+      issue: 'Divides every SUM by COUNT(Sched_Hours). Produces "average per scheduled-hour row" — non-additive figures that don\'t roll up sensibly. Needs business owner sign-off.',
+    }],
+    recommendations: [
+      ['P0', 'Consolidate [Planned Utilization] duplicates', '0.05 day'],
+      ['P0', 'Resolve three M:M relationships through JobOperKey', '0.5–1 day'],
+      ['P0', "Delete orphan 'latejobs' table", '0.05 day'],
+    ],
+  },
+};
+
+const PATTERNS = [
+  { sev: 'critical', title: 'DirectQuery on every table', scope: '14 of 15 reports', impact: '14 of 15 reports route every query to source live. Every visual triggers SQL generation, transmission, execution. Switching to Import delivers 5×–50× faster visuals.', rec: 'Migrate all reports to Import mode unless live data is a hard business requirement. Stagger rollout starting with the heaviest reports.' },
+  { sev: 'critical', title: 'Many-to-Many bidirectional relationships', scope: '12 of 15 reports', impact: '12 reports have at least one M:M with BothDirections; Inventory Turns and Scheduling have three each. M:M with bidirectional in DirectQuery is the costliest relationship type.', rec: 'Audit each M:M — confirm the join key is genuinely many on both sides. Convert to M:1 if uniqueness can be enforced; otherwise add a bridge table.' },
+  { sev: 'high', title: 'Bidirectional cross-filtering by default', scope: '15 of 15 reports', impact: 'Every report uses BothDirections on most relationships. Five reports (FIFO/LIFO, Inventory Turns, OEE, Sales, Scheduling) have ZERO single-direction relationships.', rec: 'Default rule: dimension → fact is OneDirection. Reserve BothDirections only for documented requirements (e.g. mandatory 1:1 joins).' },
+  { sev: 'medium', title: '1Foo + Foo Facts 1:1 attribute split', scope: '13 of 15 reports', impact: '14 of 15 reports separate attribute columns into a "1Foo" table joined 1:1 to a "Foo Facts" measure host. Adds an extra DirectQuery join and forces bidirectional.', rec: 'Merge each "1Foo" + "Foo Facts" pair into one fact table per report. Eliminates ~14 unnecessary relationships engagement-wide.' },
+  { sev: 'medium', title: 'Copy-pasted "z List of ..." filter-title measures', scope: '15 of 15 reports', impact: 'Every report has 8–12 measures of the same ~25-line shape. Combined LOC across the engagement is roughly 3,000+ lines of duplicated DAX. Re-evaluated on every render.', rec: 'Replace with a single shared pattern (or a Filters-pane visual). Replace deprecated 2-arg CONCATENATE with VAR-cached CONCATENATEX.' },
+  { sev: 'medium', title: '"color code ..." measures evaluate base 3× per row', scope: '6 of 15 reports', impact: '6 reports have 4–11 colour-code measures that evaluate the underlying measure three times per row. 50+ measures share the same inefficiency.', rec: 'Refactor with VAR cache + SWITCH(TRUE(), ...). Eliminates 2 redundant evaluations per render.' },
+  { sev: 'high', title: 'Pre-computed rates summed / averaged', scope: '3 of 15 reports', impact: '3 reports SUM or AVERAGE per-row rate columns (PcsPerHour, HrsPerPiece, Avg_*_Cost). The result is the sum/mean of all the per-row rates — mathematically wrong above the source row.', rec: 'Replace with rate computed from totals: DIVIDE(total_numerator, total_denominator).' },
+  { sev: 'high', title: 'Duplicate / divergent measure pairs', scope: '6 of 15 reports', impact: '6 reports have at least one near-duplicate measure pair where two names compute the same or near-same value via different paths. Maintenance burden and autocomplete trap.', rec: 'Pick canonical measure, rename or delete the duplicate.' },
+  { sev: 'high', title: 'Misnamed measures querying wrong column', scope: '3 of 15 reports', impact: "3 reports have measures whose names don't match the column they query (z List of Trans Date / Buyer values / Delviery typo). Visible in the field list.", rec: 'Fix names. Power BI auto-repoints internal references on rename.' },
+  { sev: 'medium', title: 'Bare division without DIVIDE() protection', scope: '6 of 15 reports', impact: '6 reports use plain CALCULATE(...) / CALCULATE(...) instead of DIVIDE(num, den, 0). Vulnerable to #DIV/0 and harder for the storage engine to optimise.', rec: 'Standardise on DIVIDE() with explicit third-argument default.' },
+  { sev: 'medium', title: 'Multiple date dimensions instead of role-playing Calendar', scope: '4 of 15 reports', impact: '4 reports have 2–6 separate date tables. A single role-playing Calendar via USERELATIONSHIP would be cheaper in DirectQuery and standard practice.', rec: 'Consolidate per-report date tables into a single Calendar with role-playing relationships.' },
+];
+
+const RECS = [
+  { pri: 'P0', text: 'Fix the 11 mathematical / logic bugs across the suite — Process Scrap PPM, Budget Variance, # of Receipts, color code COSTYTD, Util % default, OVERALL EFFICIENCY duplicate, and 5 more.', reports: 12, effort: '~1.5 days', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Repoint 23 "New" measures in Job Details to read the New fact table.', reports: 1, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Resolve duplicate / divergent measure pairs across 6 reports.', reports: 6, effort: '1 day', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Resolve all Many-to-Many bidirectional relationships (12 reports).', reports: 12, effort: '2–3 days', impact: '25–40% faster', cls: 'fast' },
+  { pri: 'P0', text: 'Migrate all reports to Import mode unless live data is a hard requirement.', reports: 14, effort: '5–10 days', impact: '5×–50× faster', cls: 'fast' },
+  { pri: 'P0', text: 'Change all date-dim relationships to OneDirection.', reports: 15, effort: '0.5 day', impact: '15–25% faster', cls: 'fast' },
+  { pri: 'P0', text: 'Disable Auto Date/Time on Inventory and remove 15 hidden date tables.', reports: 1, effort: '0.25 day', impact: 'Significant', cls: 'fast' },
+  { pri: 'P0', text: 'Delete orphan tables (Downtime, Scheduling, Accounting, Bookings).', reports: 4, effort: '0.25 day', impact: 'Hygiene', cls: 'gen' },
+  { pri: 'P1', text: 'Merge each "1Foo" + "Foo Facts" 1:1 split into a single fact table.', reports: 14, effort: '0.5 day each', impact: '10–20% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Refactor 50+ color-code measures with VAR cache + SWITCH(TRUE(), ...).', reports: 6, effort: '1–2 days', impact: '5–10% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Replace summed / averaged pre-computed rates with rates derived from totals.', reports: 3, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P1', text: 'Fix misnamed measures querying wrong column.', reports: 2, effort: '0.1 day', impact: 'Clarity', cls: 'gen' },
+  { pri: 'P1', text: 'Standardise division pattern: replace bare division with DIVIDE() across 6 reports.', reports: 6, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P1', text: 'Replace FILTER(table) with KEEPFILTERS(column) on 10+ measures.', reports: 6, effort: '0.5 day', impact: '5–10% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Confirm 14 measures using DIVIDE(SUM, [Sched Hours Count], 0) in Scheduling.', reports: 1, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P2', text: 'Consolidate 100+ "z List of" filter-title measures into a shared pattern.', reports: 15, effort: '2 days', impact: '5–10% on titles', cls: 'fast' },
+  { pri: 'P2', text: 'Consolidate role-playing date dimensions where reports have 2–6 separate date tables.', reports: 4, effort: '0.5 day each', impact: '5–15% faster', cls: 'fast' },
+  { pri: 'P2', text: 'Delete orphan / placeholder measures.', reports: 3, effort: '0.05 day', impact: 'Hygiene', cls: 'gen' },
+  { pri: 'P2', text: 'Replace hardcoded UTC offset and magic numbers.', reports: 2, effort: '0.1 day', impact: 'Robustness', cls: 'gen' },
+];
+
+const PHASES = [
+  { num: 1, color: 'p1', title: 'Correctness fixes', timing: 'Week 1 · ~3 days', fill: 12, items: [
+    'Fix the 11 mathematical / logic bugs across the suite',
+    'Repoint 23 "New" measures in Job Details to the New fact table',
+    'Resolve duplicate / divergent measure pairs in 6 reports',
+    'Fix misnamed list measures (DAILY Labor, Inventory)',
+    'Validate every changed measure with DAX query validation',
+  ]},
+  { num: 2, color: 'p2', title: 'Structural cleanup', timing: 'Week 2 · ~4 days', fill: 28, items: [
+    'Resolve all 18 M:M bidirectional relationships across the engagement',
+    'Change all date-dim relationships to OneDirection',
+    'Disable Auto Date/Time on Inventory; delete 15 auto-generated date tables',
+    'Delete orphan tables and orphan placeholder measures',
+  ]},
+  { num: 3, color: 'p3', title: 'Per-report consolidation', timing: 'Weeks 3–4 · ~7 days', fill: 50, items: [
+    'Merge each "1Foo" + "Foo Facts" 1:1 split (14 reports)',
+    'Consolidate role-playing date dimensions (4 reports)',
+    'Refactor 50+ color-code measures with VAR + SWITCH',
+    'Replace summed/averaged pre-computed rates with rates from totals',
+    'Replace bare division with DIVIDE() across 6 reports',
+  ]},
+  { num: 4, color: 'p4', title: 'Storage migration to Import', timing: 'Weeks 5–6 · ~7 days', fill: 78, items: [
+    'Confirm Import mode is acceptable for each report',
+    'Migrate the heaviest reports first (Job Details, Sales, Labor)',
+    'Configure refresh schedules and gateway connections',
+    'Benchmark before / after for the three slowest dashboards per report',
+  ]},
+  { num: 5, color: 'p5', title: 'DAX hygiene & standardisation', timing: 'Week 7 · ~3 days', fill: 90, items: [
+    'Consolidate 100+ "z List of" filter-title measures into a shared pattern',
+    'Standardise measure naming conventions across the engagement',
+    'Replace hardcoded UTC offsets and magic numbers',
+    'Documentation pass on every measure',
+  ]},
+  { num: 6, color: 'p6', title: 'Validation & sign-off', timing: 'Week 8 · ~2 days', fill: 100, items: [
+    'End-to-end regression test against a known dataset',
+    'Capture before / after load-time benchmarks per report',
+    'Client UAT and sign-off on each migrated report',
+    'Final consolidated report and lessons-learned document',
+  ]},
+];
+
+// ============== RENDER ==============
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+// Render comparison matrix
+function renderMatrix() {
+  const tbody = document.getElementById('matrixBody');
+  tbody.innerHTML = REPORTS.map(r => {
+    const allBidir = r.bidir === r.rel && r.rel > 0;
+    const isImport = r.storage === 'Import';
+    return `<tr>
+      <td class="name">${r.name}</td>
+      <td class="center">${r.tbl}</td>
+      <td class="center">${r.meas}</td>
+      <td class="center">${r.rel}</td>
+      <td class="center ${allBidir ? 'bad' : ''}">${r.bidir}</td>
+      <td class="center ${r.mm > 0 ? 'bad' : ''}">${r.mm}</td>
+      <td class="center ${r.oneDir > 0 ? 'good' : ''}">${r.oneDir}</td>
+      <td class="center ${isImport ? 'import-pill' : 'dq-pill'}">${r.storage === 'DirectQuery' ? 'DQ' : 'Import'}</td>
+      <td class="center">${r.dax}</td>
+      <td class="center ${r.bugs > 0 ? 'bad' : ''}">${r.bugs}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Render bug bars and DAX bars
+function renderBars() {
+  const sortedByBugs = [...REPORTS].sort((a,b) => b.bugs - a.bugs);
+  const maxBugs = sortedByBugs[0].bugs;
+  document.getElementById('bugBars').innerHTML = sortedByBugs.slice(0, 10).map(r => `
+    <div class="h-bar">
+      <div class="name">${r.name}</div>
+      <div class="h-bar-track"><div class="h-bar-fill bug" style="width: ${(r.bugs / maxBugs) * 100}%"></div></div>
+      <div class="val" style="color:${r.bugs > 0 ? 'var(--red)' : 'var(--text-muted)'}">${r.bugs}</div>
+    </div>
+  `).join('');
+
+  const sortedByDax = [...REPORTS].sort((a,b) => b.dax - a.dax);
+  const maxDax = sortedByDax[0].dax;
+  document.getElementById('daxBars').innerHTML = sortedByDax.slice(0, 10).map(r => `
+    <div class="h-bar">
+      <div class="name">${r.name}</div>
+      <div class="h-bar-track"><div class="h-bar-fill dax" style="width: ${(r.dax / maxDax) * 100}%"></div></div>
+      <div class="val">${r.dax}</div>
+    </div>
+  `).join('');
+}
+
+// Render charts (Chart.js)
+function renderCharts() {
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, sans-serif';
+  Chart.defaults.color = '#5D6D7E';
+
+  // Storage donut
+  new Chart(document.getElementById('storageChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['DirectQuery', 'Import'],
+      datasets: [{
+        data: [14, 1],
+        backgroundColor: ['#C0392B', '#27AE60'],
+        borderWidth: 0,
+        hoverOffset: 10,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, font: { size: 13 } } },
+        tooltip: { callbacks: { label: c => `${c.label}: ${c.parsed} report${c.parsed === 1 ? '' : 's'}` } },
+      },
+    },
+  });
+
+  // Relationship donut
+  new Chart(document.getElementById('relChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Bidirectional (BothDirections)', 'Many-to-Many (subset of BiDir)', 'Single-direction (OneDirection)'],
+      datasets: [{
+        data: [46, 19, 28],
+        backgroundColor: ['#D68910', '#C0392B', '#27AE60'],
+        borderWidth: 0,
+        hoverOffset: 10,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } },
+      },
+    },
+  });
+}
+
+// Render patterns
+function renderPatterns() {
+  document.getElementById('patternGrid').innerHTML = PATTERNS.map(p => `
+    <div class="pattern ${p.sev}">
+      <div class="pattern-header">
+        <div class="pattern-title">${p.title}</div>
+        <span class="pill ${p.sev}">${p.sev[0].toUpperCase() + p.sev.slice(1)}</span>
+      </div>
+      <div class="pattern-impact">${p.impact}</div>
+      <div class="pattern-rec"><strong>Fix →</strong> ${p.rec}</div>
+      <div class="pattern-scope">${p.scope}</div>
+    </div>
+  `).join('');
+}
+
+// Render roadmap
+function renderRoadmap() {
+  document.getElementById('roadmap').innerHTML = PHASES.map(ph => `
+    <div class="phase-row">
+      <div class="phase-num ${ph.color}">
+        <div class="small">Phase</div>
+        <div class="big">${ph.num}</div>
+      </div>
+      <div class="phase-content">
+        <h4>${ph.title}</h4>
+        <div class="phase-meta">${ph.timing}</div>
+        <div class="phase-bar"><div class="phase-bar-fill" style="width: ${ph.fill}%"></div></div>
+        <ul class="phase-items">
+          ${ph.items.map(it => `<li>${it}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Render recommendations
+function renderRecs(filter = 'all') {
+  const filtered = filter === 'all' ? RECS : RECS.filter(r => r.pri === filter);
+  document.getElementById('recList').innerHTML = filtered.map(r => `
+    <div class="rec-item">
+      <span class="pill ${r.pri.toLowerCase()}">${r.pri}</span>
+      <div class="rec-text">${r.text}</div>
+      <div class="rec-meta">${r.reports} report${r.reports === 1 ? '' : 's'} · ${r.effort}</div>
+      <div class="rec-impact ${r.cls}">${r.impact}</div>
+    </div>
+  `).join('');
+}
+document.getElementById('recTabs').addEventListener('click', e => {
+  if (e.target.classList.contains('rec-tab')) {
+    document.querySelectorAll('.rec-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    renderRecs(e.target.dataset.pri);
+  }
+});
+
+// Render report cards
+function renderReports() {
+  document.getElementById('reportGrid').innerHTML = REPORTS.map(r => {
+    const allBidir = r.bidir === r.rel && r.rel > 0;
+    const isImport = r.storage === 'Import';
+    return `
+    <div class="report-card" onclick="openReport('${r.id}')">
+      <div class="header-row">
+        <h4>${r.name}</h4>
+        <span class="badge-mini">${r.id}</span>
+      </div>
+      <div class="small" style="line-height:1.5;height:60px;overflow:hidden">${r.summary.slice(0, 110)}${r.summary.length > 110 ? '…' : ''}</div>
+      <div class="stat-row">
+        <div class="report-stat"><div class="num">${r.meas}</div><div class="label">Measures</div></div>
+        <div class="report-stat"><div class="num ${r.dax > 25 ? 'bad' : ''}">${r.dax}</div><div class="label">Issues</div></div>
+        <div class="report-stat"><div class="num ${r.bugs > 0 ? 'bad' : 'good'}">${r.bugs}</div><div class="label">Bugs</div></div>
+      </div>
+      <div class="badges">
+        <span class="badge-mini ${isImport ? 'import' : 'dq'}">${r.storage}</span>
+        ${allBidir ? '<span class="badge-mini allbidir">All BiDir</span>' : ''}
+        ${r.mm > 0 ? `<span class="badge-mini bug">${r.mm} M:M</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Modal
+function openReport(id) {
+  const r = REPORTS.find(x => x.id === id);
+  const d = REPORT_DETAIL[id];
+  if (!r || !d) return;
+
+  const html = `
+    <div class="modal-header">
+      <div>
+        <h3>${r.id} · ${r.name}</h3>
+        <div class="subtitle">${r.tbl} tables · ${r.cols} columns · ${r.meas} measures · ${r.rel} relationships</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <section>
+        <h4>Summary</h4>
+        <div class="summary-callout">${r.summary}</div>
+      </section>
+      <section>
+        <h4>Model snapshot</h4>
+        <div class="snapshot-table">
+          <div>Tables</div><div>${r.tbl} · ${r.cols} columns</div>
+          <div>Measures</div><div>${r.meas}</div>
+          <div>Relationships</div><div>${r.rel} · ${r.bidir} BothDirections · ${r.mm} M:M · ${r.oneDir} OneDirection</div>
+          <div>Storage mode</div><div><span class="pill ${r.storage === 'Import' ? 'strength' : 'critical'}">${r.storage}</span></div>
+          <div>Compatibility level</div><div>${r.lvl}</div>
+          <div>DAX issues · Bugs</div><div><strong>${r.dax} issues</strong> · <strong style="color:${r.bugs > 0 ? 'var(--red)' : 'var(--green)'}">${r.bugs} functional ${r.bugs === 1 ? 'bug' : 'bugs'}</strong></div>
+        </div>
+      </section>
+      <section>
+        <h4>Root causes</h4>
+        <table class="detail">
+          <thead><tr><th style="width:90px">Severity</th><th>Issue</th><th>Detail</th></tr></thead>
+          <tbody>${d.rootCauses.map(rc => `<tr><td><span class="pill ${rc[0].toLowerCase()}">${rc[0]}</span></td><td><strong>${escapeHtml(rc[1])}</strong></td><td>${escapeHtml(rc[2])}</td></tr>`).join('')}</tbody>
+        </table>
+      </section>
+      <section>
+        <h4>Relationship audit</h4>
+        <table class="detail">
+          <thead><tr><th>From</th><th>To</th><th>Card.</th><th>Direction</th></tr></thead>
+          <tbody>${d.relationships.map(rel => {
+            const isM2M = String(rel[2]).includes('M:M');
+            const isOne = String(rel[3]).includes('OneDirection');
+            return `<tr><td>${escapeHtml(rel[0])}</td><td>${escapeHtml(rel[1])}</td><td><strong style="color:${isM2M ? 'var(--red)' : 'var(--text)'}">${rel[2]}</strong></td><td style="color:${isOne ? 'var(--green)' : 'var(--amber)'};font-weight:600">${escapeHtml(rel[3])}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </section>
+      <section>
+        <h4>DAX issues identified</h4>
+        <ul class="issues-list">${d.daxIssues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
+      </section>
+      <section>
+        <h4>Representative example${d.examples.length > 1 ? 's' : ''}</h4>
+        ${d.examples.map(ex => `
+          <h5 style="font-size:14px;color:var(--navy);margin:14px 0 8px">${escapeHtml(ex.title)}</h5>
+          <pre class="code">${escapeHtml(ex.code)}</pre>
+          <div class="issue-callout"><strong>Issue:</strong> ${escapeHtml(ex.issue)}</div>
+        `).join('')}
+      </section>
+      <section>
+        <h4>Prioritised recommendations</h4>
+        ${d.recommendations.map(rec => `
+          <div class="rec-row">
+            <span class="pill ${rec[0].toLowerCase()}">${rec[0]}</span>
+            <div>${escapeHtml(rec[1])}</div>
+            <div class="effort">${escapeHtml(rec[2])}</div>
+          </div>
+        `).join('')}
+      </section>
+      ${d.note ? `<section><div class="strength-callout"><strong>Note:</strong> ${escapeHtml(d.note)}</div></section>` : ''}
+    </div>
+  `;
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Active nav highlighting
+const sections = document.querySelectorAll('main section');
+const navLinks = document.querySelectorAll('nav.toc a');
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-50% 0px -50% 0px' });
+sections.forEach(s => navObserver.observe(s));
+
+// Init
+renderMatrix();
+renderBars();
+renderCharts();
+renderPatterns();
+renderRoadmap();
+renderRecs();
+renderReports();
+</script>
+</body>
+</html>
