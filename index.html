@@ -660,7 +660,7 @@
   .issue-callout strong { color: var(--red); }
   .rec-row {
     display: grid;
-    grid-template-columns: 50px 1fr 100px;
+    grid-template-columns: 50px 1fr;
     gap: 12px;
     padding: 10px 0;
     border-bottom: 1px solid var(--border);
@@ -728,7 +728,7 @@
       <span>Power BI Health Audit · Final Report</span>
     </div>
     <h1>FLEXreport Suite<br><span class="accent">Power BI Health Audit</span></h1>
-    <p class="hero-sub">Engagement-wide review of 15 Power BI reports surfacing performance, correctness and architectural risks — with a phased plan to deliver 5×–50× faster dashboards and eliminate 57 wrong-number bugs.</p>
+    <p class="hero-sub">Engagement-wide review of 15 Power BI reports surfacing performance, correctness and architectural risks — with a phased plan to deliver 5× faster dashboards and eliminate 57 wrong-number bugs.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <div class="label">Client</div>
@@ -748,7 +748,7 @@
       </div>
       <div class="hero-meta-item">
         <div class="label">Total effort</div>
-        <div class="value">~26 days · 5 weeks</div>
+        <div class="value">~6 weeks</div>
       </div>
     </div>
   </div>
@@ -817,7 +817,7 @@
         <h3 style="margin:0">DirectQuery dominates</h3>
       </div>
       <p style="font-size:14px;color:var(--text);margin-bottom:12px;">14 of 15 reports route every query to the source live. Migrating to Import unlocks <strong style="color:var(--green)">5×–50× faster</strong> dashboards.</p>
-      <p class="small"><strong>Effort:</strong> 5–10 days · <strong>Impact:</strong> Suite-wide performance jump</p>
+      <p class="small"><strong>Impact:</strong> Suite-wide performance jump</p>
     </div>
 
     <div class="card" style="border-left: 4px solid var(--red);">
@@ -826,7 +826,7 @@
         <h3 style="margin:0">19 Many-to-Many cross-filters</h3>
       </div>
       <p style="font-size:14px;color:var(--text);margin-bottom:12px;">M:M with bidirectional filtering in DirectQuery is the costliest relationship type. 12 of 15 reports have at least one. Inventory Turns and Scheduling have three each.</p>
-      <p class="small"><strong>Effort:</strong> 2–3 days · <strong>Impact:</strong> 25–40% faster</p>
+      <p class="small"><strong>Impact:</strong> 25–40% faster</p>
     </div>
 
     <div class="card" style="border-left: 4px solid var(--red);">
@@ -835,7 +835,7 @@
         <h3 style="margin:0">57 wrong-number bugs</h3>
       </div>
       <p style="font-size:14px;color:var(--text);margin-bottom:12px;">Process Scrap PPM operator bug, Util % defaulting to 100% on /0, OVERALL EFFICIENCY duplicate, COSTYTD P-factor, and 53 more. Each shows incorrect figures in dashboards today.</p>
-      <p class="small"><strong>Effort:</strong> ~1.5 days for the top 11 · <strong>Impact:</strong> Correctness</p>
+      <p class="small"><strong>Impact:</strong> Correctness</p>
     </div>
 
     <div class="card" style="border-left: 4px solid var(--amber);">
@@ -844,7 +844,7 @@
         <h3 style="margin:0">5 reports use only bidirectional</h3>
       </div>
       <p style="font-size:14px;color:var(--text);margin-bottom:12px;">FIFO/LIFO, Inventory Turns, OEE, Sales, and Scheduling have <strong>zero</strong> single-direction relationships. The most aggressive configuration in the suite.</p>
-      <p class="small"><strong>Effort:</strong> 0.25 day each · <strong>Impact:</strong> 15–25% faster</p>
+      <p class="small"><strong>Impact:</strong> 15–25% faster</p>
     </div>
 
     <div class="card" style="border-left: 4px solid var(--green); grid-column: span 2;">
@@ -950,7 +950,7 @@
   </div>
 
   <div class="roadmap-summary">
-    <div class="big">Total: 26 working days · ~5 weeks calendar</div>
+    <div class="big">Total: 6 weeks calendar</div>
     <div class="small">Single Power BI engineer · Parallelisable to ~3–4 weeks with two engineers and a reviewer · Risk-adjusted contingency: +30%</div>
   </div>
 </section>
@@ -1057,11 +1057,11 @@ const REPORT_DETAIL = {
       issue: 'The parentheses group (Scrap/Complete + Scrap) instead of Scrap/(Complete+Scrap). Returns mathematically wrong PPM in every dashboard.',
     }],
     recommendations: [
-      ['P0', 'Fix [Process Scrap PPM] operator-precedence bug', '0.05 day'],
-      ['P0', 'Repoint 23 "New" measures to read the New fact table', '0.5 day'],
-      ['P0', 'Delete one of the two duplicate fact tables', '0.5 day'],
-      ['P0', 'Migrate to Import mode (biggest performance lever)', '1 day'],
-      ['P1', 'Consolidate six date dimensions into one role-playing Calendar', '1 day'],
+      ['P0', 'Fix [Process Scrap PPM] operator-precedence bug', '—'],
+      ['P0', 'Repoint 23 "New" measures to read the New fact table', '—'],
+      ['P0', 'Delete one of the two duplicate fact tables', '—'],
+      ['P0', 'Migrate to Import mode (biggest performance lever)', '—'],
+      ['P1', 'Consolidate six date dimensions into one role-playing Calendar', '—'],
     ],
     note: 'Optimisations on this report were already applied (with client consent) — duplicate fact deleted, all bidirectional flipped, 47 measures fixed.',
   },
@@ -1091,10 +1091,10 @@ const REPORT_DETAIL = {
       issue: 'Budget Variance compares YTD Net Income to full-period Budget — apples and oranges. Affects Budget Var % downstream.',
     }],
     recommendations: [
-      ['P0', 'Fix [Budget Variance] formula and align YTD pattern', '0.5 day'],
-      ['P0', 'Change Customers, Vendors, SortTable to OneDirection', '0.25 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
-      ['P1', 'Merge Accounting + Accounting Facts (1:1 join)', '0.5 day'],
+      ['P0', 'Fix [Budget Variance] formula and align YTD pattern', '—'],
+      ['P0', 'Change Customers, Vendors, SortTable to OneDirection', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
+      ['P1', 'Merge Accounting + Accounting Facts (1:1 join)', '—'],
     ],
   },
   '4.3': {
@@ -1122,9 +1122,9 @@ const REPORT_DETAIL = {
       issue: 'Divides by 1, returning input unchanged. Drives [color code BKLGMGN_2] which then duplicates [color code BKLGMGN].',
     }],
     recommendations: [
-      ['P0', 'Delete [backlognetmargin_format] and [color code BKLGMGN_2]', '0.05 day'],
-      ['P0', 'Resolve M:M Goals ↔ 1Bookings', '0.5 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', 'Delete [backlognetmargin_format] and [color code BKLGMGN_2]', '—'],
+      ['P0', 'Resolve M:M Goals ↔ 1Bookings', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.4': {
@@ -1151,9 +1151,9 @@ const REPORT_DETAIL = {
       issue: 'Returns #DIV/0! when Slsp_Comm_Base sums to zero. Use DIVIDE(num, den, 0).',
     }],
     recommendations: [
-      ['P0', 'Resolve M:M Orders relationship', '0.5 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
-      ['P1', 'Add proper Date dimension', '0.5 day'],
+      ['P0', 'Resolve M:M Orders relationship', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
+      ['P1', 'Add proper Date dimension', '—'],
     ],
   },
   '4.5': {
@@ -1179,9 +1179,9 @@ const REPORT_DETAIL = {
       issue: 'Functionally identical to [List of LT Rpt Date values]. Either rename, repoint, or delete the duplicate.',
     }],
     recommendations: [
-      ['P0', 'Fix [z List of Trans Date values] naming + remove duplicate', '0.25 day'],
-      ['P0', 'Resolve M:M Goals relationship', '0.5 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', 'Fix [z List of Trans Date values] naming + remove duplicate', '—'],
+      ['P0', 'Resolve M:M Goals relationship', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.6': {
@@ -1206,9 +1206,9 @@ const REPORT_DETAIL = {
       issue: 'Two measures, two names, two computation patterns. Return the same value when the underlying view is clean — but diverge if duplicates exist.',
     }],
     recommendations: [
-      ['P0', 'Resolve duplicate measure pairs', '0.25 day'],
-      ['P0', 'Delete hidden orphan 1Labour Transactions', '0.05 day'],
-      ['P0', 'Migrate to Import mode', '0.5 day'],
+      ['P0', 'Resolve duplicate measure pairs', '—'],
+      ['P0', 'Delete hidden orphan 1Labour Transactions', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.7': {
@@ -1235,9 +1235,9 @@ const REPORT_DETAIL = {
       issue: 'Each is named "Avg ..." but uses SUM. If the underlying column stores a per-row average, sum-of-averages is mathematically meaningless.',
     }],
     recommendations: [
-      ['P0', 'Resolve two M:M relationships through Items', '0.5–1 day'],
-      ['P0', 'Confirm intent of five "Avg ..." measures', '0.25 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', 'Resolve two M:M relationships through Items', '—'],
+      ['P0', 'Confirm intent of five "Avg ..." measures', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.8': {
@@ -1264,9 +1264,9 @@ const REPORT_DETAIL = {
       issue: 'One 8-column hidden DateTable per date column. Disable Auto Date/Time and rely on the existing Fiscal Year table.',
     }],
     recommendations: [
-      ['P0', 'Disable Auto Date/Time + delete 15 hidden tables', '0.25 day'],
-      ['P0', 'Resolve two M:M relationships', '0.5–1 day'],
-      ['P0', 'Rename [List of Buyer values]', '0.05 day'],
+      ['P0', 'Disable Auto Date/Time + delete 15 hidden tables', '—'],
+      ['P0', 'Resolve two M:M relationships', '—'],
+      ['P0', 'Rename [List of Buyer values]', '—'],
     ],
     note: 'Strength: This is the only report already on Import mode — significantly ahead of the rest of the suite.',
   },
@@ -1293,9 +1293,9 @@ const REPORT_DETAIL = {
       issue: "Model has 'Fiscal Year', not 'Date'. Any visual using [Last Record] fails.",
     }],
     recommendations: [
-      ['P0', "Fix [Last Record] table reference", '0.1 day'],
-      ['P0', 'Resolve three M:M relationships', '0.5–1 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', "Fix [Last Record] table reference", '—'],
+      ['P0', 'Resolve three M:M relationships', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.10': {
@@ -1323,9 +1323,9 @@ const REPORT_DETAIL = {
       issue: '[MEAN Act], [MEAN Pln] are columns, not measures. Only works inside row-context visuals.',
     }],
     recommendations: [
-      ['P0', 'Fix [Rate Variance] and [StdDist]', '0.25 day'],
-      ['P0', 'Fix [z Title] WC Dept duplication', '0.1 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', 'Fix [Rate Variance] and [StdDist]', '—'],
+      ['P0', 'Fix [z Title] WC Dept duplication', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.11': {
@@ -1353,9 +1353,9 @@ const REPORT_DETAIL = {
       issue: 'Summing per-row rates gives the sum of all the per-row rates, not the rate for the slice. Mathematically wrong above source row.',
     }],
     recommendations: [
-      ['P0', 'Delete [OVERALL EFFICIENCY] duplicate', '0.05 day'],
-      ['P0', 'Replace summed rates with rates from totals', '0.25 day'],
-      ['P0', 'Fix [Elapsed DownTime] string typo', '0.1 day'],
+      ['P0', 'Delete [OVERALL EFFICIENCY] duplicate', '—'],
+      ['P0', 'Replace summed rates with rates from totals', '—'],
+      ['P0', 'Fix [Elapsed DownTime] string typo', '—'],
     ],
   },
   '4.12': {
@@ -1382,9 +1382,9 @@ const REPORT_DETAIL = {
       issue: 'When ResourceAvail is zero, Util % returns 1 (100%) — false 100% multiplies straight into headline OEE.',
     }],
     recommendations: [
-      ['P0', 'Change [Util %] default from 1 to 0', '0.05 day'],
-      ['P0', 'Replace AVERAGE rate measures with rates from totals', '0.25 day'],
-      ['P0', 'Resolve two M:M and Date bidirection', '0.5–1 day'],
+      ['P0', 'Change [Util %] default from 1 to 0', '—'],
+      ['P0', 'Replace AVERAGE rate measures with rates from totals', '—'],
+      ['P0', 'Resolve two M:M and Date bidirection', '—'],
     ],
   },
   '4.13': {
@@ -1413,9 +1413,9 @@ const REPORT_DETAIL = {
       issue: 'COUNT already excludes blanks. Subtracting COUNTBLANK gives non-blank-count minus blank-count — meaningless.',
     }],
     recommendations: [
-      ['P0', 'Fix [# of Receipts] (use plain COUNT)', '0.05 day'],
-      ['P0', 'Disambiguate [% Cost Variance] vs [% Cost Var]', '0.1 day'],
-      ['P0', 'Resolve M:M Goals ↔ POs', '0.5 day'],
+      ['P0', 'Fix [# of Receipts] (use plain COUNT)', '—'],
+      ['P0', 'Disambiguate [% Cost Variance] vs [% Cost Var]', '—'],
+      ['P0', 'Resolve M:M Goals ↔ POs', '—'],
     ],
     note: 'Strength: 3 of 7 relationships are correctly OneDirection — the cleanest configuration in the suite.',
   },
@@ -1446,10 +1446,10 @@ const REPORT_DETAIL = {
       issue: 'Cost variant divides the period-elapsed fraction by days-in-month a second time. P factor several orders of magnitude smaller than intended.',
     }],
     recommendations: [
-      ['P0', 'Fix "Delviery" typo in 2 measure names', '0.05 day'],
-      ['P0', 'Fix [color code COSTYTD] P-factor math', '0.1 day'],
-      ['P0', 'Change all dim relationships to OneDirection', '0.25 day'],
-      ['P0', 'Migrate to Import mode', '1 day'],
+      ['P0', 'Fix "Delviery" typo in 2 measure names', '—'],
+      ['P0', 'Fix [color code COSTYTD] P-factor math', '—'],
+      ['P0', 'Change all dim relationships to OneDirection', '—'],
+      ['P0', 'Migrate to Import mode', '—'],
     ],
   },
   '4.15': {
@@ -1477,9 +1477,9 @@ const REPORT_DETAIL = {
       issue: 'Divides every SUM by COUNT(Sched_Hours). Produces "average per scheduled-hour row" — non-additive figures that don\'t roll up sensibly. Needs business owner sign-off.',
     }],
     recommendations: [
-      ['P0', 'Consolidate [Planned Utilization] duplicates', '0.05 day'],
-      ['P0', 'Resolve three M:M relationships through JobOperKey', '0.5–1 day'],
-      ['P0', "Delete orphan 'latejobs' table", '0.05 day'],
+      ['P0', 'Consolidate [Planned Utilization] duplicates', '—'],
+      ['P0', 'Resolve three M:M relationships through JobOperKey', '—'],
+      ['P0', "Delete orphan 'latejobs' table", '—'],
     ],
   },
 };
@@ -1499,61 +1499,61 @@ const PATTERNS = [
 ];
 
 const RECS = [
-  { pri: 'P0', text: 'Fix the 11 mathematical / logic bugs across the suite — Process Scrap PPM, Budget Variance, # of Receipts, color code COSTYTD, Util % default, OVERALL EFFICIENCY duplicate, and 5 more.', reports: 12, effort: '~1.5 days', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P0', text: 'Repoint 23 "New" measures in Job Details to read the New fact table.', reports: 1, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P0', text: 'Resolve duplicate / divergent measure pairs across 6 reports.', reports: 6, effort: '1 day', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P0', text: 'Resolve all Many-to-Many bidirectional relationships (12 reports).', reports: 12, effort: '2–3 days', impact: '25–40% faster', cls: 'fast' },
-  { pri: 'P0', text: 'Migrate all reports to Import mode unless live data is a hard requirement.', reports: 14, effort: '5–10 days', impact: '5×–50× faster', cls: 'fast' },
-  { pri: 'P0', text: 'Change all date-dim relationships to OneDirection.', reports: 15, effort: '0.5 day', impact: '15–25% faster', cls: 'fast' },
-  { pri: 'P0', text: 'Disable Auto Date/Time on Inventory and remove 15 hidden date tables.', reports: 1, effort: '0.25 day', impact: 'Significant', cls: 'fast' },
-  { pri: 'P0', text: 'Delete orphan tables (Downtime, Scheduling, Accounting, Bookings).', reports: 4, effort: '0.25 day', impact: 'Hygiene', cls: 'gen' },
-  { pri: 'P1', text: 'Merge each "1Foo" + "Foo Facts" 1:1 split into a single fact table.', reports: 14, effort: '0.5 day each', impact: '10–20% faster', cls: 'fast' },
-  { pri: 'P1', text: 'Refactor 50+ color-code measures with VAR cache + SWITCH(TRUE(), ...).', reports: 6, effort: '1–2 days', impact: '5–10% faster', cls: 'fast' },
-  { pri: 'P1', text: 'Replace summed / averaged pre-computed rates with rates derived from totals.', reports: 3, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P1', text: 'Fix misnamed measures querying wrong column.', reports: 2, effort: '0.1 day', impact: 'Clarity', cls: 'gen' },
-  { pri: 'P1', text: 'Standardise division pattern: replace bare division with DIVIDE() across 6 reports.', reports: 6, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P1', text: 'Replace FILTER(table) with KEEPFILTERS(column) on 10+ measures.', reports: 6, effort: '0.5 day', impact: '5–10% faster', cls: 'fast' },
-  { pri: 'P1', text: 'Confirm 14 measures using DIVIDE(SUM, [Sched Hours Count], 0) in Scheduling.', reports: 1, effort: '0.5 day', impact: 'Correctness', cls: 'fix' },
-  { pri: 'P2', text: 'Consolidate 100+ "z List of" filter-title measures into a shared pattern.', reports: 15, effort: '2 days', impact: '5–10% on titles', cls: 'fast' },
-  { pri: 'P2', text: 'Consolidate role-playing date dimensions where reports have 2–6 separate date tables.', reports: 4, effort: '0.5 day each', impact: '5–15% faster', cls: 'fast' },
-  { pri: 'P2', text: 'Delete orphan / placeholder measures.', reports: 3, effort: '0.05 day', impact: 'Hygiene', cls: 'gen' },
-  { pri: 'P2', text: 'Replace hardcoded UTC offset and magic numbers.', reports: 2, effort: '0.1 day', impact: 'Robustness', cls: 'gen' },
+  { pri: 'P0', text: 'Fix the 11 mathematical / logic bugs across the suite — Process Scrap PPM, Budget Variance, # of Receipts, color code COSTYTD, Util % default, OVERALL EFFICIENCY duplicate, and 5 more.', reports: 12, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Repoint 23 "New" measures in Job Details to read the New fact table.', reports: 1, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Resolve duplicate / divergent measure pairs across 6 reports.', reports: 6, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P0', text: 'Resolve all Many-to-Many bidirectional relationships (12 reports).', reports: 12, effort: '—', impact: '25–40% faster', cls: 'fast' },
+  { pri: 'P0', text: 'Migrate all reports to Import mode unless live data is a hard requirement.', reports: 14, effort: '—', impact: '5×–50× faster', cls: 'fast' },
+  { pri: 'P0', text: 'Change all date-dim relationships to OneDirection.', reports: 15, effort: '—', impact: '15–25% faster', cls: 'fast' },
+  { pri: 'P0', text: 'Disable Auto Date/Time on Inventory and remove 15 hidden date tables.', reports: 1, effort: '—', impact: 'Significant', cls: 'fast' },
+  { pri: 'P0', text: 'Delete orphan tables (Downtime, Scheduling, Accounting, Bookings).', reports: 4, effort: '—', impact: 'Hygiene', cls: 'gen' },
+  { pri: 'P1', text: 'Merge each "1Foo" + "Foo Facts" 1:1 split into a single fact table.', reports: 14, effort: '—', impact: '10–20% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Refactor 50+ color-code measures with VAR cache + SWITCH(TRUE(), ...).', reports: 6, effort: '—', impact: '5–10% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Replace summed / averaged pre-computed rates with rates derived from totals.', reports: 3, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P1', text: 'Fix misnamed measures querying wrong column.', reports: 2, effort: '—', impact: 'Clarity', cls: 'gen' },
+  { pri: 'P1', text: 'Standardise division pattern: replace bare division with DIVIDE() across 6 reports.', reports: 6, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P1', text: 'Replace FILTER(table) with KEEPFILTERS(column) on 10+ measures.', reports: 6, effort: '—', impact: '5–10% faster', cls: 'fast' },
+  { pri: 'P1', text: 'Confirm 14 measures using DIVIDE(SUM, [Sched Hours Count], 0) in Scheduling.', reports: 1, effort: '—', impact: 'Correctness', cls: 'fix' },
+  { pri: 'P2', text: 'Consolidate 100+ "z List of" filter-title measures into a shared pattern.', reports: 15, effort: '—', impact: '5–10% on titles', cls: 'fast' },
+  { pri: 'P2', text: 'Consolidate role-playing date dimensions where reports have 2–6 separate date tables.', reports: 4, effort: '—', impact: '5–15% faster', cls: 'fast' },
+  { pri: 'P2', text: 'Delete orphan / placeholder measures.', reports: 3, effort: '—', impact: 'Hygiene', cls: 'gen' },
+  { pri: 'P2', text: 'Replace hardcoded UTC offset and magic numbers.', reports: 2, effort: '—', impact: 'Robustness', cls: 'gen' },
 ];
 
 const PHASES = [
-  { num: 1, color: 'p1', title: 'Correctness fixes', timing: 'Week 1 · ~3 days', fill: 12, items: [
+  { num: 1, color: 'p1', title: 'Correctness fixes', timing: 'Week 1', fill: 17, items: [
     'Fix the 11 mathematical / logic bugs across the suite',
     'Repoint 23 "New" measures in Job Details to the New fact table',
     'Resolve duplicate / divergent measure pairs in 6 reports',
     'Fix misnamed list measures (DAILY Labor, Inventory)',
     'Validate every changed measure with DAX query validation',
   ]},
-  { num: 2, color: 'p2', title: 'Structural cleanup', timing: 'Week 2 · ~4 days', fill: 28, items: [
+  { num: 2, color: 'p2', title: 'Structural cleanup', timing: 'Week 2', fill: 33, items: [
     'Resolve all 18 M:M bidirectional relationships across the engagement',
     'Change all date-dim relationships to OneDirection',
     'Disable Auto Date/Time on Inventory; delete 15 auto-generated date tables',
     'Delete orphan tables and orphan placeholder measures',
   ]},
-  { num: 3, color: 'p3', title: 'Per-report consolidation', timing: 'Weeks 3–4 · ~7 days', fill: 50, items: [
+  { num: 3, color: 'p3', title: 'Per-report consolidation', timing: 'Weeks 3–4', fill: 67, items: [
     'Merge each "1Foo" + "Foo Facts" 1:1 split (14 reports)',
     'Consolidate role-playing date dimensions (4 reports)',
     'Refactor 50+ color-code measures with VAR + SWITCH',
     'Replace summed/averaged pre-computed rates with rates from totals',
     'Replace bare division with DIVIDE() across 6 reports',
   ]},
-  { num: 4, color: 'p4', title: 'Storage migration to Import', timing: 'Weeks 5–6 · ~7 days', fill: 78, items: [
+  { num: 4, color: 'p4', title: 'Storage migration to Import', timing: 'Week 5', fill: 83, items: [
     'Confirm Import mode is acceptable for each report',
     'Migrate the heaviest reports first (Job Details, Sales, Labor)',
     'Configure refresh schedules and gateway connections',
     'Benchmark before / after for the three slowest dashboards per report',
   ]},
-  { num: 5, color: 'p5', title: 'DAX hygiene & standardisation', timing: 'Week 7 · ~3 days', fill: 90, items: [
+  { num: 5, color: 'p5', title: 'DAX hygiene & standardisation', timing: 'Week 6', fill: 92, items: [
     'Consolidate 100+ "z List of" filter-title measures into a shared pattern',
     'Standardise measure naming conventions across the engagement',
     'Replace hardcoded UTC offsets and magic numbers',
     'Documentation pass on every measure',
   ]},
-  { num: 6, color: 'p6', title: 'Validation & sign-off', timing: 'Week 8 · ~2 days', fill: 100, items: [
+  { num: 6, color: 'p6', title: 'Validation & sign-off', timing: 'Week 6', fill: 100, items: [
     'End-to-end regression test against a known dataset',
     'Capture before / after load-time benchmarks per report',
     'Client UAT and sign-off on each migrated report',
@@ -1701,7 +1701,7 @@ function renderRecs(filter = 'all') {
     <div class="rec-item">
       <span class="pill ${r.pri.toLowerCase()}">${r.pri}</span>
       <div class="rec-text">${r.text}</div>
-      <div class="rec-meta">${r.reports} report${r.reports === 1 ? '' : 's'} · ${r.effort}</div>
+      <div class="rec-meta">${r.reports} report${r.reports === 1 ? '' : 's'}${r.effort && r.effort !== '\u2014' ? ' · ' + r.effort : ''}</div>
       <div class="rec-impact ${r.cls}">${r.impact}</div>
     </div>
   `).join('');
@@ -1806,7 +1806,6 @@ function openReport(id) {
           <div class="rec-row">
             <span class="pill ${rec[0].toLowerCase()}">${rec[0]}</span>
             <div>${escapeHtml(rec[1])}</div>
-            <div class="effort">${escapeHtml(rec[2])}</div>
           </div>
         `).join('')}
       </section>
